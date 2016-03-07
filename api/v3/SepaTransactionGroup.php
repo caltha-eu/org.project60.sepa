@@ -122,7 +122,7 @@ function civicrm_api3_sepa_transaction_group_getdetail($params) {
       civicrm_sdd_file.reference        AS file,
       civicrm_sdd_creditor.currency
     FROM civicrm_sdd_txgroup as txgroup
-    LEFT JOIN civicrm_sdd_contribution_txgroup as txgroup_contrib on txgroup.id = txgroup_contrib.txgroup_id 
+    LEFT JOIN civicrm_sdd_contribution_txgroup as txgroup_contrib on txgroup.id = txgroup_contrib.txgroup_id
     LEFT JOIN civicrm_contribution as contrib on txgroup_contrib.contribution_id = contrib.id 
     LEFT JOIN civicrm_sdd_file on sdd_file_id = civicrm_sdd_file.id
     LEFT JOIN civicrm_sdd_creditor on sdd_creditor_id = civicrm_sdd_creditor.id
