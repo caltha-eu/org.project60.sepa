@@ -303,6 +303,11 @@ class CRM_Admin_Form_Setting_SepaSettings extends CRM_Core_Form
         CRM_Sepa_Logic_Settings::setSetting((isset($values['sdd_no_draft_xml'])     ? "1" : "0"), 'sdd_no_draft_xml');
         CRM_Sepa_Logic_Settings::setSetting((isset($values['pp_buffer_days'])       ? (int) $values['pp_buffer_days'] : "0"), 'pp_buffer_days');
 
+        // save import settings
+        foreach ($this->import_fields as $key => $field) {
+            CRM_Core_BAO_Setting::setItem($values[$key], 'SEPA Direct Debit Preferences', $key);
+        }
+
         $session = CRM_Core_Session::singleton();
         $session->setStatus(E::ts("Settings successfully updated."), E::ts("Saved"), 'info');
         CRM_Core_DAO::triggerRebuild();
