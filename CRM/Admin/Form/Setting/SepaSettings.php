@@ -23,6 +23,7 @@ class CRM_Admin_Form_Setting_SepaSettings extends CRM_Core_Form
 {
     private $config_fields;
     private $custom_fields;
+    private $import_fields;
 
     function __construct() {
        parent::__construct();
@@ -47,6 +48,48 @@ class CRM_Admin_Form_Setting_SepaSettings extends CRM_Core_Form
                          array('custom_RCUR_notice',     ts('Recurring&nbsp;notice&nbsp;days (follow-up)', array('domain' => 'org.project60.sepa')), array('size' => 2)),
                          array('custom_FRST_notice',     ts('Recurring&nbsp;notice&nbsp;days (initial)', array('domain' => 'org.project60.sepa')), array('size' => 2)),
                          array('custom_update_lock_timeout', ts('Update lock timeout', array('domain' => 'org.project60.sepa')), array('size' => 2)));
+      $this->import_fields = array(
+        'import_financial_type_id' => array(
+          'type' => 'text',
+          'label' => ts("Financial type id", array('domain' => 'org.project60.sepa')),
+          'options' => array(),
+        ),
+        'import_campaign_id' => array(
+          'type' => 'text',
+          'label' => ts("Campaign id", array('domain' => 'org.project60.sepa')),
+          'options' => array(),
+        ),
+        'import_collection_day' => array(
+          'type' => 'text',
+          'label' => ts("Collection day", array('domain' => 'org.project60.sepa')),
+          'options' => array(),
+        ),
+        'import_interval' => array(
+          'type' => 'text',
+          'label' => ts("Interval", array('domain' => 'org.project60.sepa')),
+          'options' => array(),
+        ),
+        'import_date_format' => array(
+          'type' => 'text',
+          'label' => ts("Date format", array('domain' => 'org.project60.sepa')),
+          'options' => array(),
+        ),
+        'import_thousands_delimiter' => array(
+          'type' => 'text',
+          'label' => ts("Thousands delimiter", array('domain' => 'org.project60.sepa')),
+          'options' => array(),
+        ),
+        'import_decimal_delimiter' => array(
+          'type' => 'text',
+          'label' => ts("Decimal delimiter", array('domain' => 'org.project60.sepa')),
+          'options' => array(),
+        ),
+        'import_contact_custom_field' => array(
+          'type' => 'text',
+          'label' => ts("Contact custom field", array('domain' => 'org.project60.sepa')),
+          'options' => array(),
+        ),
+      );
     }
 
     function domainToString($raw) {
@@ -216,14 +259,10 @@ class CRM_Admin_Form_Setting_SepaSettings extends CRM_Core_Form
         CRM_Core_Resources::singleton()->addVars('p60sdd', CRM_Sepa_Logic_PaymentInstruments::getDefaultSEPAPaymentInstruments());
 
         // import settings
-        $this->addElement('text', 'import_financial_type_id', ts("Financial type id", array('domain' => 'org.project60.sepa')));
-        $this->addElement('text', 'import_campaign_id', ts("Campaign id", array('domain' => 'org.project60.sepa')));
-        $this->addElement('text', 'import_collection_day', ts("Collection day", array('domain' => 'org.project60.sepa')));
-        $this->addElement('text', 'import_interval', ts("Interval", array('domain' => 'org.project60.sepa')));
-        $this->addElement('text', 'import_date_format', ts("Date format", array('domain' => 'org.project60.sepa')));
-        $this->addElement('text', 'import_thousands_delimiter', ts("Thousands delimiter", array('domain' => 'org.project60.sepa')));
-        $this->addElement('text', 'import_decimal_delimiter', ts("Decimal delimiter", array('domain' => 'org.project60.sepa')));
-        $this->addElement('text', 'import_contact_custom_field', ts("Contact custom field", array('domain' => 'org.project60.sepa')));
+        foreach ($this->import_fields as $key => $field) {
+          $value = CRM_Core_BAO_Setting::getItem('SEPA Direct Debit Preferences', $key);
+          $this->addElement($field['type'], $key, $field['label'], $field['options'] + array('value' => $value));
+        }
 
       $this->addButtons([
         [
