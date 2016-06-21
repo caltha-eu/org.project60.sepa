@@ -318,8 +318,8 @@ return array(
     'add' => '4.6',
     'is_domain' => 1,
     'is_contact' => 0,
-    'description' => 'Default Creditor',
-    'help_text' => 'This creditor will be used when no other creditor is explicitely set',
+    'description' => 'Default financial type',
+    'help_text' => 'Default financial type',
   ),
   'import_campaign_id' => array(
     'group_name' => 'SEPA Direct Debit Preferences',
