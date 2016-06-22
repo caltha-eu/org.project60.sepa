@@ -261,7 +261,7 @@ class CRM_Admin_Form_Setting_SepaSettings extends CRM_Core_Form
         // import settings
         foreach ($this->import_fields as $key => $field) {
           $value = CRM_Core_BAO_Setting::getItem('SEPA Direct Debit Preferences', $key);
-          $this->addElement($field['type'], $key, $field['label'], $field['options'] + array('value' => $value));
+          $this->addElement($field['type'], $key, $field['label'], $field['options'])->setValue($value);
         }
 
       $this->addButtons([
