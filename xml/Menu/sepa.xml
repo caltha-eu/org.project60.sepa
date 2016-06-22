@@ -71,6 +71,13 @@
     <access_arguments>access CiviCRM</access_arguments>
   </item>
   <item>
+    <path>civicrm/sepa/import-notvalid</path>
+    <page_callback>CRM_Sepa_Page_ImportNotValid</page_callback>
+    <title>CiviSEPA Import - Not valid</title>
+    <desc>Import mandates from .csv file - not valid file</desc>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
+  <item>
     <path>civicrm/sepa/deletegroup</path>
     <page_callback>CRM_Sepa_Page_DeleteGroup</page_callback>
     <title>Delete transaction group</title>

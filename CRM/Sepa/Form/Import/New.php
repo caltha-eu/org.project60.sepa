@@ -11,6 +11,9 @@ class CRM_Sepa_Form_Import_New extends CRM_Core_Form {
   
   private $fields = array();
 
+  private $delimiter = ',';
+  private $enclosure = '"';
+
   // todo print values below the form
   private $readonlyFields = array(
     'interval' => array(),
@@ -114,15 +117,39 @@ class CRM_Sepa_Form_Import_New extends CRM_Core_Form {
 
   function postProcess() {
     $importFile = $this->controller->exportValue($this->_name, 'importFile');
-    CRM_Core_Error::debug_var('$importFile', $importFile);
+    $creditor_id = $this->controller->exportValue($this->_name, 'creditor_id');
+    $financial_type_id = $this->controller->exportValue($this->_name, 'financial_type_id');
+    $campaign_id = $this->controller->exportValue($this->_name, 'campaign_id');
+    $collection_day = $this->controller->exportValue($this->_name, 'collection_day');
+    $start_date = $this->controller->exportValue($this->_name, 'start_date');
+
+    $val = array(
+      $importFile,
+      $creditor_id,
+      $financial_type_id,
+      $campaign_id,
+      $collection_day,
+      $start_date
+    );
 
     $values = $this->exportValues();
-    CRM_Core_Error::debug_var('$values', $values);
 
-    $importFile['name'];
-    $fp = fopen($importFile['name'], 'r');
-    $content = fread($fp, filesize($importFile['name']));
-    CRM_Core_Error::debug_var('$content', $content);
+
+    $content = file($importFile['name']);
+    $data = array();
+    foreach ($content as $line) {
+      $data[] = array_map('trim', str_getcsv($line, $this->delimiter, $this->enclosure));
+    }
+
+    if (CRM_Sepa_Logic_Import::validateImportFile($data, $this->settings)) {
+      // todo add queue
+      // todo reload to runner
+      CRM_Core_Session::singleton()->pushUserContext(CRM_Utils_System::url('civicrm/sepa/import', 'reset=2'));
+    } else {
+      $session = new CRM_Core_Session();
+      $session->set('errors', CRM_Sepa_Logic_Import::$errors, 'sepa-import');
+      CRM_Core_Session::singleton()->pushUserContext(CRM_Utils_System::url('civicrm/sepa/import-notvalid'));
+    }
   }
 
 
