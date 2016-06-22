@@ -3,6 +3,7 @@
 abstract class CRM_Sepa_Logic_Import {
 
   public static $errors = array();
+  private static $error_message = '';
 
   /** @var array List of fields with required status */
   private static $required = array(
@@ -43,8 +44,8 @@ abstract class CRM_Sepa_Logic_Import {
   );
 
   private static $re = array(
-    'iban' => '[a-zA-Z]{2}[0-9]{2}[a-zA-Z0-9]{4}[0-9]{7}([a-zA-Z0-9]?){0,16}',
-    'email' => '^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$',
+    'iban' => '/[a-zA-Z]{2}[0-9]{2}[a-zA-Z0-9]{4}[0-9]{7}([a-zA-Z0-9]?){0,16}/',
+    'email' => '/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/',
   );
 
   private static $decimalDelimiter = ',';
@@ -72,7 +73,7 @@ abstract class CRM_Sepa_Logic_Import {
     /* first row always contains header */
     for ($i = 1; $i < $n; $i++) {
       if (!self::validateRow($content[$i])) {
-        self::$errors[] = $i;
+        self::$errors[] = array('line' => $i+1, 'message' => self::$error_message);
       }
     }
     return !count(self::$errors);
@@ -89,15 +90,18 @@ abstract class CRM_Sepa_Logic_Import {
   private static function validateRow($row) {
     foreach (self::$required as $key => $requ) {
       if ($requ && !$row[self::$column[$key]]) {
+        self::$error_message = ts('Required field %1 is not set', array('domain' => 'org.project60.sepa', 1 => $key));
         return false;
       }
       if (in_array($key, array_keys(self::$re))) {
         if (!preg_match(self::$re[$key], $row[self::$column[$key]])) {
+          self::$error_message = ts('Field %1 has wrong format', array('domain' => 'org.project60.sepa', 1 => $key));
           return false;
         }
       }
       if ($key == 'amount') {
         if (!self::validateAmount($row[self::$column[$key]])) {
+          self::$error_message = ts('Amount has wrong format', array('domain' => 'org.project60.sepa'));
           return false;
         }
       }
