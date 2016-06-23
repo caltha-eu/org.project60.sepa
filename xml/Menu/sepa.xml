@@ -85,6 +85,13 @@
     <access_arguments>access CiviCRM</access_arguments>
   </item>
   <item>
+    <path>civicrm/sepa/import-cancel</path>
+    <page_callback>CRM_Sepa_Page_ImportCancel</page_callback>
+    <title>CiviSEPA Import - Cancel</title>
+    <desc>Import mandates from .csv file - cancel the import</desc>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
+  <item>
     <path>civicrm/sepa/import-runner</path>
     <page_callback>CRM_Sepa_Page_ImportRunner</page_callback>
     <title>CiviSEPA Import - Runner</title>
