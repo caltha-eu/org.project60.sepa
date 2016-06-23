@@ -184,7 +184,7 @@ class CRM_Sepa_Form_Import_New extends CRM_Core_Form {
 
 
   private function getFinancialTypes() {
-    $result = civicrm_api3('FinancialType', 'get', array('is_active' => 1));
+    $result = civicrm_api3('FinancialType', 'get', array('is_active' => 1, 'options' => array('limit' => 0)));
     $arr = array();
     if (array_key_exists('values', $result) && count($result['values']) > 0) {
       foreach ($result['values'] as $item) {
@@ -196,7 +196,7 @@ class CRM_Sepa_Form_Import_New extends CRM_Core_Form {
 
 
   private function getCampaigns() {
-    $result = civicrm_api3('Campaign', 'get', array('is_active' => 1));
+    $result = civicrm_api3('Campaign', 'get', array('is_active' => 1, 'options' => array('limit' => 0)));
     $arr = array();
     if (array_key_exists('values', $result) && count($result['values']) > 0) {
       foreach ($result['values'] as $item) {
