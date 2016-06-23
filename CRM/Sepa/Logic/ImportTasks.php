@@ -44,17 +44,41 @@ class CRM_Sepa_Logic_ImportTasks {
   public static function createMandates(CRM_Queue_TaskContext $ctx, $batch) {
     $session = new CRM_Core_Session();
     $params = $session->get('params', 'sepa-import');
+    $import_hash = $session->get('import_hash', 'sepa-import');
 
     foreach ($batch as $id => $row) {
       try {
+        // todo add transaction and rollback
         $contactId = self::createContact($row);
         $result = self::createMandate($row, $params, $contactId);
+
+        $log = array(
+          'import_hash' => $import_hash,
+          'status' => CRM_Sepa_Logic_ImportLog::STATUS_OK,
+          'reference' => $row[CRM_Sepa_Logic_Import::$column['reference']],
+          'mandate_id' => $result['id'],
+          'filename' => '',
+          'row' => $id+1,
+          'data' => serialize($row),
+        );
+        CRM_Sepa_Logic_ImportLog::add($log);
+
       } catch (Exception $ex) {
         CRM_Core_Error::debug_var('$ex', $ex->getMessage());
         CRM_Core_Error::debug_var('$ex->getTraceAsString()', $ex->getTraceAsString());
+        $log = array(
+          'import_hash' => $import_hash,
+          'status' => CRM_Sepa_Logic_ImportLog::STATUS_FAILED,
+          'reference' => $row[CRM_Sepa_Logic_Import::$column['reference']],
+          'mandate_id' => 0,
+          'filename' => '',
+          'row' => $id+1,
+          'data' => serialize($row),
+          'api_error' => $ex->getMessage()."\n".$ex->getTraceAsString(),
+        );
+        CRM_Sepa_Logic_ImportLog::add($log);
       }
     }
-    sleep(1);
     return TRUE;
   }
 

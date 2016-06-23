@@ -47,4 +47,21 @@ abstract class CRM_Sepa_Logic_ImportLog {
     }
     return $data;
   }
+
+
+  public static function getStats($import_hash) {
+    $data = array();
+    $query = "SELECT status, count(id) n FROM civicrm_sdd_import_log WHERE import_hash = %1 GROUP BY status";
+    $params = array(
+      1 => array($import_hash, 'String'),
+    );
+    $dao = CRM_Core_DAO::executeQuery($query, $params);
+    while ($dao->fetch()) {
+      $data[$dao->status] = array(
+        'status' => $dao->status,
+        'n' => $dao->n,
+      );
+    }
+    return $data;
+  }
 }

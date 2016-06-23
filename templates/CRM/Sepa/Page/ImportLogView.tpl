@@ -14,3 +14,19 @@
 +-------------------------------------------------------*}
 
 <p>TODO Log view...</p>
+
+<h3>Stats</h3>
+<ul>
+  {foreach from=$stats item=st}
+    <li>{$st.status} : {$st.n}</li>
+  {/foreach}
+</ul>
+
+<h3>Errors</h3>
+<ol>
+  {foreach from=$failed item=val}
+    <li>{$val.reference} : {$val.api_error|truncate:100:'..':true:false}</li>
+  {/foreach}
+</ol>
+
+<p><a href="{crmURL p='civicrm/sepa/import'}" class="button">Start again</a></p>

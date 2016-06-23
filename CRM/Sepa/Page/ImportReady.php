@@ -21,11 +21,14 @@ class CRM_Sepa_Page_ImportReady extends CRM_Core_Page {
       $settings['currency'] = $result['values'][0]['currency'];
       $session->set('params', array_merge($params, $settings) , 'sepa-import');
 
+      $import_hash = CRM_Sepa_Logic_ImportLog::newHash();
+      $session->set('import_hash', $import_hash, 'sepa-import');
+
       $this->addTaskStarting($queue);
 
       $batches = ceil(count($data) / $this->batchSize);
       for ($i = 1; $i <= $batches; $i++) {
-        $batch = array_slice($data, $i * $this->batchSize - $this->batchSize, $this->batchSize);
+        $batch = array_slice($data, $i * $this->batchSize - $this->batchSize, $this->batchSize, TRUE);
         $this->addTaskCreateMandate($queue, $batch, $i, $batches);
       }
     }
