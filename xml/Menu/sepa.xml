@@ -66,7 +66,7 @@
   <item>
     <path>civicrm/sepa/import</path>
     <page_callback>CRM_Sepa_Form_Import_New</page_callback>
-    <title>CiviSEPA Import</title>
+    <title>CiviSEPA Import - New import</title>
     <desc>Import mandates from .csv file</desc>
     <access_arguments>access CiviCRM</access_arguments>
   </item>
