@@ -13,11 +13,4 @@
 | written permission from the original author(s).        |
 +-------------------------------------------------------*}
 
-<p>Import file is not valid. Not valid lines:</p>
-<ul>
-  {foreach from=$errors item=error}
-    <li>{$error.line} : {$error.message}</li>
-  {/foreach}
-</ul>
-
-<a href="{crmURL p='civicrm/sepa/import'}">Start again</a>
+<p>TODO Log view...</p>

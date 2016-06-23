@@ -78,6 +78,27 @@
     <access_arguments>access CiviCRM</access_arguments>
   </item>
   <item>
+    <path>civicrm/sepa/import-ready</path>
+    <page_callback>CRM_Sepa_Page_ImportReady</page_callback>
+    <title>CiviSEPA Import - Ready to start</title>
+    <desc>Import mandates from .csv file - import is ready to start</desc>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
+  <item>
+    <path>civicrm/sepa/import-runner</path>
+    <page_callback>CRM_Sepa_Page_ImportRunner</page_callback>
+    <title>CiviSEPA Import - Runner</title>
+    <desc>Import mandates from .csv file - runner</desc>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
+  <item>
+    <path>civicrm/sepa/import-log-view</path>
+    <page_callback>CRM_Sepa_Page_ImportLogView</page_callback>
+    <title>CiviSEPA Import - View log</title>
+    <desc>Import mandates from .csv file - view log after import</desc>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
+  <item>
     <path>civicrm/sepa/deletegroup</path>
     <page_callback>CRM_Sepa_Page_DeleteGroup</page_callback>
     <title>Delete transaction group</title>

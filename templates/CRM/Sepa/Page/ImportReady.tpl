@@ -13,11 +13,13 @@
 | written permission from the original author(s).        |
 +-------------------------------------------------------*}
 
-<p>Import file is not valid. Not valid lines:</p>
+<p>Import mandates is ready to start</p>
+<p>Count: {$count}</p>
+<p>Params:</p>
 <ul>
-  {foreach from=$errors item=error}
-    <li>{$error.line} : {$error.message}</li>
+  {foreach from=$params item=p}
+    <li>{$p}</li>
   {/foreach}
 </ul>
 
-<a href="{crmURL p='civicrm/sepa/import'}">Start again</a>
+<a href="{crmURL p='civicrm/sepa/import-runner'}">Run the queue</a>
