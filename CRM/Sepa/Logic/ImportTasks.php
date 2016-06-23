@@ -29,7 +29,6 @@ class CRM_Sepa_Logic_ImportTasks {
    * @return bool
    */
   public static function starting(CRM_Queue_TaskContext $ctx) {
-    CRM_Core_Error::debug_var('STARTING', 111);
     return TRUE;
   }
 
@@ -45,9 +44,68 @@ class CRM_Sepa_Logic_ImportTasks {
   public static function createMandates(CRM_Queue_TaskContext $ctx, $batch) {
     $session = new CRM_Core_Session();
     $params = $session->get('params', 'sepa-import');
-    CRM_Core_Error::debug_var('$batch', $batch);
-    CRM_Core_Error::debug_var('$params in task createMandates', $params);
-    sleep(5);
+
+    foreach ($batch as $id => $row) {
+      try {
+        $contactId = self::createContact($row);
+        $result = self::createMandate($row, $params, $contactId);
+      } catch (Exception $ex) {
+        CRM_Core_Error::debug_var('$ex', $ex->getMessage());
+        CRM_Core_Error::debug_var('$ex->getTraceAsString()', $ex->getTraceAsString());
+      }
+    }
+    sleep(1);
     return TRUE;
+  }
+
+
+  /**
+   * Get or create if needed contact.
+   *
+   * @param array $row One row from import file
+   *
+   * @return int Contact Id
+   */
+  private static function createContact($row) {
+    return 56247;
+  }
+
+
+  /**
+   * Create one mandate for contact.
+   *
+   * @param array $row
+   * @param array $params Params and settings merged into single array
+   * @param int $contactId
+   *
+   * @return array
+   * @throws \CiviCRM_API3_Exception
+   */
+  private static function createMandate($row, $params, $contactId) {
+    // todo Add support for custom field
+    // todo Bic calculate by iban
+    $bic = '';
+    $amount = $row[CRM_Sepa_Logic_Import::$column['amount']];
+    $amount = CRM_Sepa_Logic_Import::castAmount($amount);
+    $params_mandate = array(
+      'sequential' => 1,
+      'contact_id' => $contactId,
+      'creditor_id' => $params['creditor_id'],
+      'type' => $params['default_mandate_type'],
+      'reference' => $row[CRM_Sepa_Logic_Import::$column['reference']],
+      'iban' => $row[CRM_Sepa_Logic_Import::$column['iban']],
+      'bic' => $bic,
+      'source' => $row[CRM_Sepa_Logic_Import::$column['source']],
+      'financial_type_id' => $params['financial_type_id'],
+      'frequency_interval' => $params['import_interval'],
+      'amount' => $amount,
+      'start_date' => $params['start_date'],
+      'create_date' => date('Y-m-d'),
+      'cycle_day' => $params['collection_day'],
+      'campaign_id' => $params['campaign_id'],
+      'currency' => $params['currency'],
+    );
+    $result = civicrm_api3('SepaMandate', 'createfull', $params_mandate);
+    return $result;
   }
 }

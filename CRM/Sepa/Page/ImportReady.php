@@ -4,18 +4,26 @@ require_once 'CRM/Core/Page.php';
 
 class CRM_Sepa_Page_ImportReady extends CRM_Core_Page {
 
+  // todo change to 50 after development
+  // todo later : move param to import settings (default 50)
   private $batchSize = 3;
 
   function run() {
     $session = new CRM_Core_Session();
     $data = $session->get('data', 'sepa-import');
-    $this->assign('rows', count($data) - 1);
+    $params = $session->get('params', 'sepa-import');
+    $this->assign('rows', count($data));
 
     $queue = CRM_Sepa_Logic_ImportQueue::singleton()->getQueue();
     if (!$queue->numberOfItems()) {
+      $settings = CRM_Sepa_Logic_Import::getSettings();
+      $result = civicrm_api3('SepaCreditor', 'get', array('sequential' => 1, 'id' => $params['creditor_id'], 'return' => 'currency'));
+      $settings['currency'] = $result['values'][0]['currency'];
+      $session->set('params', array_merge($params, $settings) , 'sepa-import');
+
       $this->addTaskStarting($queue);
 
-      $batches = ceil((count($data) - 1) / $this->batchSize);
+      $batches = ceil(count($data) / $this->batchSize);
       for ($i = 1; $i <= $batches; $i++) {
         $batch = array_slice($data, $i * $this->batchSize - $this->batchSize, $this->batchSize);
         $this->addTaskCreateMandate($queue, $batch, $i, $batches);
