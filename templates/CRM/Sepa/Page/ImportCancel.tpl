@@ -15,4 +15,4 @@
 
 <p>Import was cancelled</p>
 
-<p><a href="{crmURL p='civicrm/sepa/import'}">Start again</a></p>
+<p><a href="{crmURL p='civicrm/sepa/import'}" class="button">Start again</a></p>

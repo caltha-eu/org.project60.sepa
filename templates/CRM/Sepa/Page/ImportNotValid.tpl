@@ -20,4 +20,4 @@
   {/foreach}
 </ul>
 
-<a href="{crmURL p='civicrm/sepa/import'}">Start again</a>
+<p><a href="{crmURL p='civicrm/sepa/import'}" class="button">Start again</a></p>

@@ -14,13 +14,8 @@
 +-------------------------------------------------------*}
 
 <p>Import mandates is ready to start</p>
-<p>Count: {$count}</p>
-<p>Params:</p>
-<ul>
-  {foreach from=$params item=p}
-    <li>{$p}</li>
-  {/foreach}
-</ul>
+<p>Rows: {$rows}</p>
 
-<p><a href="{crmURL p='civicrm/sepa/import-runner'}">Run the queue</a></p>
-<p><a href="{crmURL p='civicrm/sepa/import-cancel'}">Cancel the queue</a></p>
+<p><a href="{crmURL p='civicrm/sepa/import-runner'}" class="button">Run import</a></p>
+<p>&nbsp;</p>
+<p><a href="{crmURL p='civicrm/sepa/import-cancel'}">Cancel import</a></p>
