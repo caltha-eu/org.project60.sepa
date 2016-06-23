@@ -144,8 +144,21 @@ abstract class CRM_Sepa_Logic_Import {
    * @return bool
    */
   private static function validateAmount($amount) {
-    $new_amount = preg_replace('/[^0-9.]+/', '', $amount);
-    $new_amount = number_format($new_amount/100, 2, self::$decimalDelimiter, self::$thousandsDelimiter);
+    $new_amount = self::castAmount($amount);
+    $new_amount = number_format($new_amount, 2, self::$decimalDelimiter, self::$thousandsDelimiter);
     return ($amount === $new_amount);
+  }
+
+
+  /**
+   * Cast string amount from file into valid float type.
+   *
+   * @param String $amount
+   *
+   * @return float
+   */
+  public static function castAmount($amount) {
+    $new_amount = preg_replace('/[^0-9.]+/', '', $amount);
+    return $new_amount/100;
   }
 }
