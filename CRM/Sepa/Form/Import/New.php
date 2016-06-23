@@ -130,6 +130,8 @@ class CRM_Sepa_Form_Import_New extends CRM_Core_Form {
     foreach ($content as $line) {
       $data[] = array_map('trim', str_getcsv($line, $this->delimiter, $this->enclosure));
     }
+    // remove first row which contains header
+    unset($data[0]);
 
     $session = new CRM_Core_Session();
     if (CRM_Sepa_Logic_Import::validateImportFile($data, $this->settings)) {

@@ -95,11 +95,10 @@ abstract class CRM_Sepa_Logic_Import {
     self::$dateFormat = $settings['import_date_format'];
 
     self::$errors = array();
-    $n = count($content);
-    /* first row always contains header */
-    for ($i = 1; $i < $n; $i++) {
-      if (!self::validateRow($content[$i])) {
-        self::$errors[] = array('line' => $i+1, 'message' => self::$error_message);
+    $i = 0;
+    foreach ($content as $row) {
+      if (!self::validateRow($row)) {
+        self::$errors[] = array('line' => ++$i, 'message' => self::$error_message);
       }
     }
     return !count(self::$errors);
