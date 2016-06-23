@@ -2,6 +2,10 @@
 
 abstract class CRM_Sepa_Logic_ImportLog {
 
+  const STATUS_OK = 0;
+  const STATUS_FAILED = -1;
+  const STATUS_SKIPPED = 1;
+
   public static function newHash() {
     return md5(time());
   }
