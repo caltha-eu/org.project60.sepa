@@ -17,7 +17,7 @@ abstract class CRM_Sepa_Logic_Import {
     'phone' => FALSE,
     'email' => TRUE,
     'amount' => TRUE,
-    'mandate_reference' => TRUE,
+    'reference' => TRUE,
     'iban' => TRUE,
     'source' => FALSE,
     'note' => FALSE,
@@ -25,7 +25,7 @@ abstract class CRM_Sepa_Logic_Import {
   );
 
   /** @var array  */
-  private static $column = array(
+  public static $column = array(
     'first_name' => 0,
     'last_name' => 1,
     'birth_date' => 2,
@@ -36,7 +36,7 @@ abstract class CRM_Sepa_Logic_Import {
     'phone' => 7,
     'email' => 8,
     'amount' => 9,
-    'mandate_reference' => 10,
+    'reference' => 10,
     'iban' => 11,
     'source' => 12,
     'note' => 13,
@@ -53,6 +53,32 @@ abstract class CRM_Sepa_Logic_Import {
   private static $thousandsDelimiter = ' ';
 
   private static $dateFormat = 'Y-m-d';
+
+
+  /**
+   * Get import settings
+   *
+   * @return array
+   */
+  public static function getSettings() {
+    $keys = array(
+      'batching_default_creditor' => null,
+      'default_mandate_type' => null,
+      'import_financial_type_id' => null,
+      'import_campaign_id' => null,
+      'import_collection_day' => null,
+      'import_interval' => null,
+      'import_date_format' => null,
+      'import_thousands_delimiter' => null,
+      'import_decimal_delimiter' => null,
+      'import_contact_custom_field' => null,
+    );
+    foreach ($keys as $key => $val) {
+      $value = CRM_Core_BAO_Setting::getItem('SEPA Direct Debit Preferences', $key);
+      $keys[$key] = $value;
+    }
+    return $keys;
+  }
 
 
   /**

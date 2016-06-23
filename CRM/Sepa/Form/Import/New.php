@@ -81,7 +81,7 @@ class CRM_Sepa_Form_Import_New extends CRM_Core_Form {
     $this->fields['financial_type_id']['options'] = $this->financialTypes;
     $this->campaigns = $this->getCampaigns();
     $this->fields['campaign_id']['options'] = $this->campaigns;
-    $this->settings = $this->getSettings();
+    $this->settings = CRM_Sepa_Logic_Import::getSettings();
     parent::preProcess();
   }
 
@@ -204,26 +204,5 @@ class CRM_Sepa_Form_Import_New extends CRM_Core_Form {
       }
     }
     return $arr;
-  }
-
-
-  private function getSettings() {
-    $keys = array(
-      'batching_default_creditor' => null,
-      'default_mandate_type' => null,
-      'import_financial_type_id' => null,
-      'import_campaign_id' => null,
-      'import_collection_day' => null,
-      'import_interval' => null,
-      'import_date_format' => null,
-      'import_thousands_delimiter' => null,
-      'import_decimal_delimiter' => null,
-      'import_contact_custom_field' => null,
-    );
-    foreach ($keys as $key => $val) {
-      $value = CRM_Core_BAO_Setting::getItem('SEPA Direct Debit Preferences', $key);
-      $keys[$key] = $value;
-    }
-    return $keys;
   }
 }
