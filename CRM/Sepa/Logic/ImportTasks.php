@@ -55,7 +55,6 @@ class CRM_Sepa_Logic_ImportTasks {
       $tx = new CRM_Core_Transaction();
       try {
         $contactId = self::createContact($row);
-        CRM_Core_Error::debug_var('$contactId', $contactId);
         $result = self::createMandate($row, $params, $contactId);
         $log = array(
           'import_hash' => $import_hash,
