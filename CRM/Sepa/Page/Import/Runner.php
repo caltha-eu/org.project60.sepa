@@ -2,15 +2,15 @@
 
 require_once 'CRM/Core/Page.php';
 
-class CRM_Sepa_Page_ImportRunner extends CRM_Core_Page {
+class CRM_Sepa_Page_Import_Runner extends CRM_Core_Page {
 
   function run() {
-    $queue = CRM_Sepa_Logic_ImportQueue::singleton()->getQueue();
+    $queue = CRM_Sepa_Logic_Import_Queue::singleton()->getQueue();
     $runner = new CRM_Queue_Runner(array(
       'title' => ts('SEPA Import'),
       'queue' => $queue,
       'errorMode'=> CRM_Queue_Runner::ERROR_CONTINUE,
-      'onEnd' => array('CRM_Sepa_Page_ImportRunner', 'onEnd'),
+      'onEnd' => array('CRM_Sepa_Page_Import_Runner', 'onEnd'),
       'onEndUrl' => CRM_Utils_System::url('civicrm/sepa/import-log-view'),
     ));
     $runner->runAllViaWeb();

@@ -19,9 +19,9 @@
  * This is a helper class for the import queue.
  * It is a singleton class because it will hold the queue object for our extension
  */
-class CRM_Sepa_Logic_ImportQueue {
+class CRM_Sepa_Logic_Import_Queue {
 
-  const QUEUE_NAME = 'org.project60.sepa.importqueue';
+  const QUEUE_NAME = 'org.project60.sepa.import';
 
   private $queue;
 
@@ -41,11 +41,11 @@ class CRM_Sepa_Logic_ImportQueue {
 
 
   /**
-   * @return CRM_Sepa_Logic_ImportQueue
+   * @return CRM_Sepa_Logic_Import_Queue
    */
   public static function singleton() {
     if (!self::$singleton) {
-      self::$singleton = new CRM_Sepa_Logic_ImportQueue();
+      self::$singleton = new CRM_Sepa_Logic_Import_Queue();
     }
     return self::$singleton;
   }

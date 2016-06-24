@@ -18,7 +18,7 @@
 /**
  * Class CRM_Sepa_Logic_ImportTasks
  */
-class CRM_Sepa_Logic_ImportTasks {
+class CRM_Sepa_Logic_Import_Tasks {
 
   private static $country_ids = array();
 
@@ -66,7 +66,7 @@ class CRM_Sepa_Logic_ImportTasks {
         $result = self::createMandate($row, $params, $contactId);
         $log = array(
           'import_hash' => $import_hash,
-          'status' => CRM_Sepa_Logic_ImportLog::STATUS_OK,
+          'status' => CRM_Sepa_Logic_Import_Log::STATUS_OK,
           'reference' => $row[CRM_Sepa_Logic_Import::$column['reference']],
           'mandate_id' => $result['id'],
           'filename' => '',
@@ -78,7 +78,7 @@ class CRM_Sepa_Logic_ImportTasks {
         $tx->rollback();
         $log = array(
           'import_hash' => $import_hash,
-          'status' => CRM_Sepa_Logic_ImportLog::STATUS_FAILED,
+          'status' => CRM_Sepa_Logic_Import_Log::STATUS_FAILED,
           'reference' => $row[CRM_Sepa_Logic_Import::$column['reference']],
           'mandate_id' => 0,
           'filename' => '',
@@ -92,7 +92,7 @@ class CRM_Sepa_Logic_ImportTasks {
     }
 
     foreach ($logs as $log) {
-      CRM_Sepa_Logic_ImportLog::add($log);
+      CRM_Sepa_Logic_Import_Log::add($log);
     }
 
     return TRUE;

@@ -2,7 +2,7 @@
 
 require_once 'CRM/Core/Page.php';
 
-class CRM_Sepa_Page_ImportReady extends CRM_Core_Page {
+class CRM_Sepa_Page_Import_Ready extends CRM_Core_Page {
 
   // todo later : move param to import settings (default 50)
   private $batchSize = 50;
@@ -13,14 +13,14 @@ class CRM_Sepa_Page_ImportReady extends CRM_Core_Page {
     $params = $session->get('params', 'sepa-import');
     $this->assign('rows', count($data));
 
-    $queue = CRM_Sepa_Logic_ImportQueue::singleton()->getQueue();
+    $queue = CRM_Sepa_Logic_Import_Queue::singleton()->getQueue();
     if (!$queue->numberOfItems()) {
       $settings = CRM_Sepa_Logic_Import::getSettings();
       $result = civicrm_api3('SepaCreditor', 'get', array('sequential' => 1, 'id' => $params['creditor_id'], 'return' => 'currency'));
       $settings['currency'] = $result['values'][0]['currency'];
       $session->set('params', array_merge($params, $settings) , 'sepa-import');
 
-      $import_hash = CRM_Sepa_Logic_ImportLog::newHash();
+      $import_hash = CRM_Sepa_Logic_Import_Log::newHash();
       $session->set('import_hash', $import_hash, 'sepa-import');
       $session->set('country_ids', $this->determineCountryIds($data), 'sepa-import');
 
@@ -42,7 +42,7 @@ class CRM_Sepa_Page_ImportReady extends CRM_Core_Page {
    */
   private function addTaskStarting(CRM_Queue_Queue &$queue) {
     $task = new CRM_Queue_Task(
-      array('CRM_Sepa_Logic_ImportTasks', 'starting'),
+      array('CRM_Sepa_Logic_Import_Tasks', 'starting'),
       array(),
       'Starting import mandates'
     );
@@ -58,7 +58,7 @@ class CRM_Sepa_Page_ImportReady extends CRM_Core_Page {
    */
   private function addTaskCreateMandate(CRM_Queue_Queue &$queue, $batch, $counter, $n) {
     $task = new CRM_Queue_Task(
-      array('CRM_Sepa_Logic_ImportTasks', 'createMandates'),
+      array('CRM_Sepa_Logic_Import_Tasks', 'createMandates'),
       array($batch),
       'Created mandates in batch '.$counter."/".$n
     );

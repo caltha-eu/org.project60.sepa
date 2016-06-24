@@ -1,6 +1,6 @@
 <?php
 
-abstract class CRM_Sepa_Logic_ImportLog {
+abstract class CRM_Sepa_Logic_Import_Log {
 
   const STATUS_OK = 0;
   const STATUS_FAILED = -1;

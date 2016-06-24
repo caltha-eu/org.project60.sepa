@@ -171,7 +171,7 @@ abstract class CRM_Sepa_Logic_Import {
               WHERE il.reference = %1 AND il.status = %2";
     $params = array(
       1 => array($reference, 'String'),
-      2 => array(CRM_Sepa_Logic_ImportLog::STATUS_OK, 'Integer'),
+      2 => array(CRM_Sepa_Logic_Import_Log::STATUS_OK, 'Integer'),
     );
     $count = (int)CRM_Core_DAO::singleValueQuery($query, $params);
     return !$count;
