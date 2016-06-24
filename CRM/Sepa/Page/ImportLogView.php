@@ -10,9 +10,11 @@ class CRM_Sepa_Page_ImportLogView extends CRM_Core_Page {
     $session->set('params', null, 'sepa-import');
     $import_hash = $session->get('import_hash', 'sepa-import');
     $stats = CRM_Sepa_Logic_ImportLog::getStats($import_hash);
-    $failed = CRM_Sepa_Logic_ImportLog::getFailedByHash($import_hash);
-    $this->assign('stats', $stats);
-    $this->assign('failed', $failed);
+    $errors = CRM_Sepa_Logic_ImportLog::getFailedByHash($import_hash);
+    $this->assign('import_hash', $import_hash);
+    $this->assign('ok', (int)$stats[CRM_Sepa_Logic_ImportLog::STATUS_OK]['n']);
+    $this->assign('failed', (int)$stats[CRM_Sepa_Logic_ImportLog::STATUS_FAILED]['n']);
+    $this->assign('errors', $errors);
     return parent::run();
   }
 }

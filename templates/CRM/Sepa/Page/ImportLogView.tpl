@@ -13,20 +13,27 @@
 | written permission from the original author(s).        |
 +-------------------------------------------------------*}
 
-<p>TODO Log view...</p>
-
-<h3>Stats</h3>
-<ul>
-  {foreach from=$stats item=st}
-    <li>{$st.status} : {$st.n}</li>
-  {/foreach}
-</ul>
+<h3>Stats for import <strong>{$import_hash}</strong></h3>
+<table>
+  <tr><th>Status</th><th>Count</th></tr>
+  <tr><td>OK</td><td>{$ok}</td></tr>
+  <tr><td>Failed</td><td>{$failed}</td></tr>
+</table>
 
 <h3>Errors</h3>
-<ol>
-  {foreach from=$failed item=val}
-    <li>{$val.reference} : {$val.api_error|truncate:100:'..':true:false}</li>
+<table>
+  <tr>
+    <th>Row</th>
+    <th>Reference</th>
+    <th>API Error</th>
+  </tr>
+  {foreach from=$errors item=val}
+    <tr>
+      <td>{$val.row}</td>
+      <td>{$val.reference}</td>
+      <td>{$val.api_error|truncate:100:'..':true:false}</td>
+    </tr>
   {/foreach}
-</ol>
+</table>
 
 <p><a href="{crmURL p='civicrm/sepa/import'}" class="button">Start again</a></p>
