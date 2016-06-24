@@ -15,7 +15,7 @@ abstract class CRM_Sepa_Logic_Import {
     'postal_code' => TRUE,
     'country_id' => TRUE,
     'phone' => FALSE,
-    'email' => TRUE,
+    'email' => FALSE,
     'amount' => TRUE,
     'reference' => TRUE,
     'iban' => TRUE,
