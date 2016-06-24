@@ -10,7 +10,7 @@ abstract class CRM_Sepa_Logic_Import {
     'first_name' => TRUE,
     'last_name' => TRUE,
     'birth_date' => FALSE,
-    'address_street' => TRUE,
+    'street_address' => TRUE,
     'city' => TRUE,
     'postal_code' => TRUE,
     'country_id' => TRUE,
@@ -29,7 +29,7 @@ abstract class CRM_Sepa_Logic_Import {
     'first_name' => 0,
     'last_name' => 1,
     'birth_date' => 2,
-    'address_street' => 3,
+    'street_address' => 3,
     'city' => 4,
     'postal_code' => 5,
     'country_id' => 6,
@@ -121,7 +121,7 @@ abstract class CRM_Sepa_Logic_Import {
         self::$error_message = ts('Required field %1 is not set', array('domain' => 'org.project60.sepa', 1 => $key));
         return false;
       }
-      if (in_array($key, array_keys(self::$re))) {
+      if (in_array($key, array_keys(self::$re)) && $row[self::$column[$key]]) {
         if (!preg_match(self::$re[$key], $row[self::$column[$key]])) {
           self::$error_message = ts('Field %1 has wrong format', array('domain' => 'org.project60.sepa', 1 => $key));
           return false;
