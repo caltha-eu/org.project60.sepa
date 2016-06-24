@@ -166,7 +166,9 @@ abstract class CRM_Sepa_Logic_Import {
    * @return bool True - ok, this reference can be imported
    */
   private static function validateReference($reference) {
-    $query = "SELECT count(id) FROM civicrm_sdd_import_log WHERE reference = %1 AND status = %2";
+    $query = "SELECT count(il.id)
+              FROM civicrm_sdd_import_log il JOIN civicrm_sdd_mandate m ON il.reference = m.reference
+              WHERE il.reference = %1 AND il.status = %2";
     $params = array(
       1 => array($reference, 'String'),
       2 => array(CRM_Sepa_Logic_ImportLog::STATUS_OK, 'Integer'),
