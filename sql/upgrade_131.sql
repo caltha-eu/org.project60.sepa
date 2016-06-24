@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS `civicrm_sdd_import_log` (
   `import_hash` VARCHAR(45) NOT NULL,
   `log_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `status` INT(10) NOT NULL COMMENT 'Import status: 0 ok, -1 failed, 1 skipped',
-  `reference` VARCHAR(35) NOT NULL COMMENT 'Mandate reference',
+  `reference` VARCHAR(255) NOT NULL COMMENT 'Mandate reference',
   `mandate_id` INT(10) UNSIGNED NULL,
   `filename` VARCHAR(255) NULL,
   `row` INT(10) NULL COMMENT 'Row number in file',

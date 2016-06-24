@@ -50,12 +50,13 @@ class CRM_Sepa_Logic_ImportTasks {
     $import_hash = $session->get('import_hash', 'sepa-import');
     self::$country_ids = $session->get('country_ids', 'sepa-import');
 
+    $logs = array();
     foreach ($batch as $id => $row) {
+      $tx = new CRM_Core_Transaction();
       try {
-        // todo add transaction and rollback
         $contactId = self::createContact($row);
+        CRM_Core_Error::debug_var('$contactId', $contactId);
         $result = self::createMandate($row, $params, $contactId);
-
         $log = array(
           'import_hash' => $import_hash,
           'status' => CRM_Sepa_Logic_ImportLog::STATUS_OK,
@@ -65,9 +66,9 @@ class CRM_Sepa_Logic_ImportTasks {
           'row' => $id+1,
           'data' => serialize($row),
         );
-        CRM_Sepa_Logic_ImportLog::add($log);
-
+        $logs[] = $log;
       } catch (Exception $ex) {
+        $tx->rollback();
         $log = array(
           'import_hash' => $import_hash,
           'status' => CRM_Sepa_Logic_ImportLog::STATUS_FAILED,
@@ -78,9 +79,15 @@ class CRM_Sepa_Logic_ImportTasks {
           'data' => serialize($row),
           'api_error' => $ex->getMessage()."\n".$ex->getTraceAsString(),
         );
-        CRM_Sepa_Logic_ImportLog::add($log);
+        $logs[] = $log;
       }
+      $tx = null;
     }
+
+    foreach ($logs as $log) {
+      CRM_Sepa_Logic_ImportLog::add($log);
+    }
+
     return TRUE;
   }
 
