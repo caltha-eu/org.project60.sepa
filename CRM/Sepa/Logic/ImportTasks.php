@@ -24,6 +24,8 @@ class CRM_Sepa_Logic_ImportTasks {
 
   private static $location_type_id = 1;
 
+  private static $bic_installed = false;
+
   /**
    * Task just for starting
    * 
@@ -49,6 +51,12 @@ class CRM_Sepa_Logic_ImportTasks {
     $params = $session->get('params', 'sepa-import');
     $import_hash = $session->get('import_hash', 'sepa-import');
     self::$country_ids = $session->get('country_ids', 'sepa-import');
+    $result = civicrm_api3('Extension', 'get', array(
+      'sequential' => 1,
+      'is_active' => 1,
+      'key' => "org.project60.bic",
+    ));
+    self::$bic_installed = !!$result['count'];
 
     $logs = array();
     foreach ($batch as $id => $row) {
@@ -202,8 +210,14 @@ class CRM_Sepa_Logic_ImportTasks {
    */
   private static function createMandate($row, $params, $contactId) {
     // todo Add support for custom field
-    // todo Bic calculate by iban
     $bic = '';
+    if (self::$bic_installed) {
+      $result = civicrm_api3('Bic', 'findbyiban', array(
+        'sequential' => 1,
+        'iban' => $row[CRM_Sepa_Logic_Import::$column['iban']],
+      ));
+      $bic = $result['bic'];
+    }
     $amount = $row[CRM_Sepa_Logic_Import::$column['amount']];
     $amount = CRM_Sepa_Logic_Import::castAmount($amount);
     $params_mandate = array(

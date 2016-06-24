@@ -4,9 +4,8 @@ require_once 'CRM/Core/Page.php';
 
 class CRM_Sepa_Page_ImportReady extends CRM_Core_Page {
 
-  // todo change to 50 after development
   // todo later : move param to import settings (default 50)
-  private $batchSize = 3;
+  private $batchSize = 50;
 
   function run() {
     $session = new CRM_Core_Session();
