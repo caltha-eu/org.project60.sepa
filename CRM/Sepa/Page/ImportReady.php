@@ -23,6 +23,7 @@ class CRM_Sepa_Page_ImportReady extends CRM_Core_Page {
 
       $import_hash = CRM_Sepa_Logic_ImportLog::newHash();
       $session->set('import_hash', $import_hash, 'sepa-import');
+      $session->set('country_ids', $this->determineCountryIds($data), 'sepa-import');
 
       $this->addTaskStarting($queue);
 
@@ -63,5 +64,31 @@ class CRM_Sepa_Page_ImportReady extends CRM_Core_Page {
       'Created mandates in batch '.$counter."/".$n
     );
     $queue->createItem($task);
+  }
+
+
+  /**
+   * Prepare array of country_id based on data from import file.
+   *
+   * @param array $data
+   *
+   * @return array
+   * @throws \CiviCRM_API3_Exception
+   */
+  private function determineCountryIds($data) {
+    $country = array();
+    $country_ids = array();
+    foreach ($data as $row) {
+      $country[$row[CRM_Sepa_Logic_Import::$column['country_id']]] = $row[CRM_Sepa_Logic_Import::$column['country_id']];
+    }
+    $result = civicrm_api3('Country', 'get', array(
+      'sequential' => 1,
+      'return' => "id,iso_code",
+      'iso_code' => array('IN' => array_keys($country)),
+    ));
+    foreach ($result['values'] as $value) {
+      $country_ids[$value['iso_code']] = $value['id'];
+    }
+    return $country_ids;
   }
 }

@@ -20,6 +20,9 @@
  */
 class CRM_Sepa_Logic_ImportTasks {
 
+  private static $country_ids = array();
+
+  private static $location_type_id = 1;
 
   /**
    * Task just for starting
@@ -45,6 +48,7 @@ class CRM_Sepa_Logic_ImportTasks {
     $session = new CRM_Core_Session();
     $params = $session->get('params', 'sepa-import');
     $import_hash = $session->get('import_hash', 'sepa-import');
+    self::$country_ids = $session->get('country_ids', 'sepa-import');
 
     foreach ($batch as $id => $row) {
       try {
@@ -64,8 +68,6 @@ class CRM_Sepa_Logic_ImportTasks {
         CRM_Sepa_Logic_ImportLog::add($log);
 
       } catch (Exception $ex) {
-        CRM_Core_Error::debug_var('$ex', $ex->getMessage());
-        CRM_Core_Error::debug_var('$ex->getTraceAsString()', $ex->getTraceAsString());
         $log = array(
           'import_hash' => $import_hash,
           'status' => CRM_Sepa_Logic_ImportLog::STATUS_FAILED,
@@ -91,9 +93,96 @@ class CRM_Sepa_Logic_ImportTasks {
    * @return int Contact Id
    */
   private static function createContact($row) {
-    return 56247;
+    if ($row[CRM_Sepa_Logic_Import::$column['email']]) {
+      $params = array(
+        'sequential' => 1,
+        'contact_type' => 'Individual',
+        'email' => $row[CRM_Sepa_Logic_Import::$column['email']],
+        'first_name' => $row[CRM_Sepa_Logic_Import::$column['first_name']],
+        'last_name' => $row[CRM_Sepa_Logic_Import::$column['last_name']],
+        'api.Address.get' => array(
+          'id' => '$value.address_id',
+          'contact_id' => '$value.id',
+          'location_type_id' => self::$location_type_id,
+          'is_primary' => 1,
+          'country_id' => self::$country_ids[$row[CRM_Sepa_Logic_Import::$column['country_id']]],
+          'postal_code' => $row[CRM_Sepa_Logic_Import::$column['postal_code']],
+          'city' => $row[CRM_Sepa_Logic_Import::$column['city']],
+          'street_address' => $row[CRM_Sepa_Logic_Import::$column['street_address']],
+        ),
+      );
+      $result = civicrm_api3('Contact', 'get', $params);
+      if ($result['count'] == 1) {
+        $contactId = $result['id'];
+        if ($result['values'][0]['api.Address.get']['count'] == 0) {
+          self::newAddress($row, $contactId);
+        }
+        return $contactId;
+      } else {
+        return self::newContact($row);
+      }
+    } else {
+      return self::newContact($row);
+    }
   }
 
+
+  /**
+   * Create whole new contact.
+   *
+   * @param array $row
+   *
+   * @return int
+   * @throws \CiviCRM_API3_Exception
+   */
+  private static function newContact($row) {
+    $params = array(
+      'sequential' => 1,
+      'contact_type' => 'Individual',
+      'email' => $row[CRM_Sepa_Logic_Import::$column['email']],
+      'first_name' => $row[CRM_Sepa_Logic_Import::$column['first_name']],
+      'last_name' => $row[CRM_Sepa_Logic_Import::$column['last_name']],
+      'birth_date' => $row[CRM_Sepa_Logic_Import::$column['birth_date']],
+      'api.Address.create' => array(
+        'contact_id' => '$value.id',
+        'location_type_id' => self::$location_type_id,
+        'country_id' => self::$country_ids[$row[CRM_Sepa_Logic_Import::$column['country_id']]],
+        'postal_code' => $row[CRM_Sepa_Logic_Import::$column['postal_code']],
+        'city' => $row[CRM_Sepa_Logic_Import::$column['city']],
+        'street_address' => $row[CRM_Sepa_Logic_Import::$column['street_address']],
+      ),
+    );
+    if ($row[CRM_Sepa_Logic_Import::$column['phone']]) {
+      $params['api.Phone.create'] = array(
+        'contact_id' => '$value.id',
+        'phone' => $row[CRM_Sepa_Logic_Import::$column['phone']],
+      );
+    }
+    $result = civicrm_api3('Contact', 'create', $params);
+    return (int)$result['id'];
+  }
+
+
+  /**
+   * Create new primary address for given contact.
+   *
+   * @param array $row
+   * @param int $contactId
+   *
+   * @throws \CiviCRM_API3_Exception
+   */
+  private static function newAddress($row, $contactId) {
+    $params = array(
+      'contact_id' => $contactId,
+      'location_type_id' => self::$location_type_id,
+      'is_primary' => 1,
+      'country_id' => self::$country_ids[$row[CRM_Sepa_Logic_Import::$column['country_id']]],
+      'postal_code' => $row[CRM_Sepa_Logic_Import::$column['postal_code']],
+      'city' => $row[CRM_Sepa_Logic_Import::$column['city']],
+      'street_address' => $row[CRM_Sepa_Logic_Import::$column['street_address']],
+    );
+    civicrm_api3('Address', 'create', $params);
+  }
 
   /**
    * Create one mandate for contact.
