@@ -101,6 +101,9 @@ abstract class CRM_Sepa_Logic_Import {
         self::$errors[] = array('line' => ++$i, 'message' => self::$error_message);
       }
     }
+    if (!self::validateUniqueReference($content)) {
+      self::$errors[] = array('line' => 0, 'message' => ts('Mandate references are not unique in file', array('domain' => 'org.project60.sepa')));
+    }
     return !count(self::$errors);
   }
 
@@ -126,7 +129,13 @@ abstract class CRM_Sepa_Logic_Import {
       }
       if ($key == 'amount') {
         if (!self::validateAmount($row[self::$column[$key]])) {
-          self::$error_message = ts('Amount has wrong format', array('domain' => 'org.project60.sepa'));
+          self::$error_message = ts('Amount "%1" has wrong format', array('domain' => 'org.project60.sepa', 1 => $row[self::$column[$key]]));
+          return false;
+        }
+      }
+      if ($key == 'reference' && $row[self::$column[$key]]) {
+        if (!self::validateReference($row[self::$column[$key]])) {
+          self::$error_message = ts('Mandate reference "%1" already exists', array('domain' => 'org.project60.sepa', 1 => $row[self::$column[$key]]));
           return false;
         }
       }
@@ -146,6 +155,40 @@ abstract class CRM_Sepa_Logic_Import {
     $new_amount = self::castAmount($amount);
     $new_amount = number_format($new_amount, 2, self::$decimalDelimiter, self::$thousandsDelimiter);
     return ($amount === $new_amount);
+  }
+
+
+  /**
+   * Check if mandate reference is valid (doesn't exist in db already).
+   *
+   * @param String $reference
+   *
+   * @return bool True - ok, this reference can be imported
+   */
+  private static function validateReference($reference) {
+    $query = "SELECT count(id) FROM civicrm_sdd_import_log WHERE reference = %1 AND status = %2";
+    $params = array(
+      1 => array($reference, 'String'),
+      2 => array(CRM_Sepa_Logic_ImportLog::STATUS_OK, 'Integer'),
+    );
+    $count = (int)CRM_Core_DAO::singleValueQuery($query, $params);
+    return !$count;
+  }
+
+
+  /**
+   * Check if mandate references are unique in whole file.
+   *
+   * @param array $content
+   *
+   * @return bool
+   */
+  private static function validateUniqueReference($content) {
+    $references = array();
+    foreach ($content as $row) {
+      $references[$row[CRM_Sepa_Logic_Import::$column['reference']]] = $row[CRM_Sepa_Logic_Import::$column['reference']];
+    }
+    return (count($content) == count($references));
   }
 
 
