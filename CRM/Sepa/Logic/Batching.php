@@ -126,7 +126,7 @@ class CRM_Sepa_Logic_Batching {
           contribution_recur_id, id
         FROM civicrm_contribution
         WHERE contribution_recur_id in ($rcontrib_id_strings)
-          AND receive_date = '$collection_date'
+          AND DATE(receive_date) = DATE('$collection_date')
           AND payment_instrument_id = $payment_instrument_id;";
       $results = CRM_Core_DAO::executeQuery($sql_query);
       while ($results->fetch()) {
@@ -161,7 +161,10 @@ class CRM_Sepa_Logic_Batching {
             );
           $contribution = civicrm_api('Contribution', 'create', $contribution_data);
           if (empty($contribution['is_error'])) {
-            // Success! 'mandate_entity_id' will now be overwritten with the contribution instance ID
+            // Success! Call the post_create hook
+            CRM_Utils_SepaCustomisationHooks::installment_created($mandate['mandate_id'], $recur_id, $contribution['id']);
+
+            // 'mandate_entity_id' will now be overwritten with the contribution instance ID
             //  to allow compatibility in with OOFF groups in the syncGroups function
             $mandates_by_nextdate[$collection_date][$index]['mandate_entity_id'] = $contribution['id'];
           } else {
@@ -590,14 +593,14 @@ class CRM_Sepa_Logic_Batching {
         $now = strtotime("now +$rcur_notice days");
         $date = CRM_Sepa_Logic_Batching::getNextExecutionDate($rcontribution, $now, TRUE);
       }
-      return CRM_Utils_Date::customFormat($date, ts("%B %E%f"));
+      return CRM_Utils_Date::customFormat($date, ts("%B %E%f", array('domain' => 'org.project60.sepa')));
     } elseif ($unit == 'week') {
       // FIXME: weekly not supported yet
       return '';
 
     } else {
       // this is a x-monthly payment
-      return ts("%1.", array(1=>$cycle_day));
+      return ts("%1.", array(1=>$cycle_day, 'domain' => 'org.project60.sepa'));
     }
   }
 

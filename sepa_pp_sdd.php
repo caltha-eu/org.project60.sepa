@@ -124,16 +124,17 @@ function sepa_pp_buildForm ( $formName, &$form ) {
 			$creditor     = civicrm_api3('SepaCreditor', 'getsingle', array('id' => $mandate['creditor_id']));
 			$contribution = civicrm_api3('Contribution', 'getsingle', array('trxn_id' => $mandate_reference));
 			$rcontribution = array(
-				'cycle_day'              => $form->_params["cycle_day"],
-				'frequency_interval'     => $form->_params["frequency_interval"],
-				'frequency_unit'         => $form->_params["frequency_unit"]);
+				'cycle_day'              => CRM_Utils_Array::value('cycle_day', $form->_params),
+				'frequency_interval'     => CRM_Utils_Array::value('frequency_interval', $form->_params),
+				'frequency_unit'         => CRM_Utils_Array::value('frequency_unit', $form->_params),
+				'start_date'             => CRM_Utils_Array::value('start_date', $form->_params));
 			
 			$form->assign('mandate_reference',          $mandate_reference);
 			$form->assign("bank_account_number",        $mandate["iban"]);
 			$form->assign("bank_identification_number", $mandate["bic"]);
-			$form->assign("collection_day",             $form->_params["cycle_day"]);
-			$form->assign("frequency_interval",         $form->_params["frequency_interval"]);
-			$form->assign("frequency_unit",             $form->_params["frequency_unit"]);
+			$form->assign("collection_day",             CRM_Utils_Array::value('cycle_day', $form->_params));
+			$form->assign("frequency_interval",         CRM_Utils_Array::value('frequency_interval', $form->_params));
+			$form->assign("frequency_unit",             CRM_Utils_Array::value('frequency_unit', $form->_params));
 			$form->assign("creditor_id",                $creditor['identifier']);
 			$form->assign("collection_date",            $contribution['receive_date']);
 			$form->assign("cycle",                      CRM_Sepa_Logic_Batching::getCycle($rcontribution));
@@ -208,8 +209,8 @@ function sepa_pp_install() {
 		$payment_processor_data = array(
 		    "version"                   => 3,
 		    "name"                      => "SEPA_Direct_Debit",
-		    "title"                     => ts("SEPA Direct Debit"),
-		    "description"               => ts("Payment processor for the 'Single European Payement Area' (SEPA)."),
+		    "title"                     => ts("SEPA Direct Debit", array('domain' => 'org.project60.sepa')),
+		    "description"               => ts("Payment processor for the 'Single European Payement Area' (SEPA).", array('domain' => 'org.project60.sepa')),
 		    "is_active"                 => 1,
 		    "user_name_label"           => "SEPA Creditor identifier",
 		    "class_name"                => "Payment_SDD",
@@ -240,12 +241,21 @@ function sepa_pp_install() {
 			}
 		}
 	}
+
+	// make sure, to put back the class name for formerly disabled processors
+	$sepa_pp_query = CRM_Core_DAO::executeQuery("SELECT civicrm_payment_processor.id AS id FROM civicrm_payment_processor LEFT JOIN civicrm_payment_processor_type ON civicrm_payment_processor.payment_processor_type_id = civicrm_payment_processor_type.id WHERE civicrm_payment_processor_type.class_name = 'Payment_SDD'");
+	while ($sepa_pp_query->fetch()) {
+		CRM_Core_DAO::executeQuery("UPDATE civicrm_payment_processor SET class_name ='Payment_SDD' WHERE id = {$sepa_pp_query->id}");
+	}
 }
 
 /**
  * Will disable the SEPA payment processor
  */
 function sepa_pp_disable() {
+	// set all existing SDD instances to Payment_Dummy
+	CRM_Core_DAO::executeQuery("UPDATE civicrm_payment_processor SET class_name ='Payment_Dummy' WHERE class_name ='Payment_SDD'");
+
 	// get payment processor...
 	$sdd_pp = civicrm_api('PaymentProcessorType', 'getsingle', array('name'=>'SEPA_Direct_Debit', 'version' => 3));
 	if (empty($sdd_pp['is_error'])) {

@@ -53,8 +53,8 @@ class CRM_Sepa_Logic_Group {
       UPDATE civicrm_sdd_mandate AS mandate
       SET status='SENT'
       WHERE 
-        mandate.entity_id IN (SELECT contribution_id 
-                              FROM civicrm_sdd_contribution_txgroup 
+        mandate.entity_table = 'civicrm_contribution' AND mandate.entity_id IN (SELECT contribution_id
+                              FROM civicrm_sdd_contribution_txgroup
                               WHERE txgroup_id=$txgroup_id);";
       CRM_Core_DAO::executeQuery($sql);    
 
@@ -81,7 +81,7 @@ class CRM_Sepa_Logic_Group {
       UPDATE civicrm_sdd_mandate AS mandate
       SET status='RCUR'
       WHERE 
-        mandate.entity_id IN (SELECT civicrm_contribution_recur.id 
+        mandate.entity_table = 'civicrm_contribution_recur' AND mandate.entity_id IN (SELECT civicrm_contribution_recur.id
                               FROM civicrm_sdd_contribution_txgroup
                               LEFT JOIN civicrm_contribution ON civicrm_contribution.id = civicrm_sdd_contribution_txgroup.contribution_id
                               LEFT JOIN civicrm_contribution_recur ON civicrm_contribution_recur.id = civicrm_contribution.contribution_recur_id
@@ -120,7 +120,7 @@ class CRM_Sepa_Logic_Group {
           'version'                 => 3));
     if (isset($result['is_error']) && $result['is_error']) {
       $lock->release();
-      sprintf(ts("Cannot close transaction group! Error was: '%s'"), $result['error_message']);
+      sprintf(ts("Cannot close transaction group! Error was: '%s'", array('domain' => 'org.project60.sepa')), $result['error_message']);
     } 
 
     $lock->release();
@@ -145,14 +145,18 @@ class CRM_Sepa_Logic_Group {
     }
 
     // step 1: gather data
-    $group_status_id_open = (int) CRM_Core_OptionGroup::getValue('batch_status', 'Open', 'name');  
-    $group_status_id_closed = (int) CRM_Core_OptionGroup::getValue('batch_status', 'Closed', 'name');  
+    $group_status_id_open     = (int) CRM_Core_OptionGroup::getValue('batch_status', 'Open', 'name');  
+    $group_status_id_closed   = (int) CRM_Core_OptionGroup::getValue('batch_status', 'Closed', 'name');  
     $group_status_id_received = (int) CRM_Core_OptionGroup::getValue('batch_status', 'Received', 'name');
-    $status_pending = (int) CRM_Core_OptionGroup::getValue('contribution_status', 'Pending', 'name');  
-    $status_closed = (int) CRM_Core_OptionGroup::getValue('contribution_status', 'Completed', 'name');  
+    $status_pending    = (int) CRM_Core_OptionGroup::getValue('contribution_status', 'Pending', 'name');  
+    $status_closed     = (int) CRM_Core_OptionGroup::getValue('contribution_status', 'Completed', 'name');  
     $status_inprogress = (int) CRM_Core_OptionGroup::getValue('contribution_status', 'In Progress', 'name');  
     
-    if (empty($group_status_id_received)) return civicrm_api3_create_error("Status 'Received' does not exist!");
+    if (empty($group_status_id_received)) 
+      return civicrm_api3_create_error("Status 'Received' does not exist!");
+
+    if (empty($status_pending) || empty($status_closed) || empty($status_inprogress)) 
+      return civicrm_api3_create_error("Status 'Pending', 'Completed' or 'In Progress' does not exist!");
 
     // step 0: load the group object  
     $txgroup = civicrm_api('SepaTransactionGroup', 'getsingle', array('id'=>$txgroup_id, 'version'=>3));
@@ -214,7 +218,7 @@ class CRM_Sepa_Logic_Group {
     LEFT JOIN
       civicrm_contribution AS contribution ON contribution.id = txn_to_contribution.contribution_id
     WHERE
-      contribution_status_id != $status_closed
+      contribution_status_id IN ($status_pending,$status_inprogress)
     AND
       txn_to_contribution.txgroup_id IN ($txgroup_id);
     ";

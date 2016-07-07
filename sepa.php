@@ -57,7 +57,7 @@ function sepa_civicrm_pageRun( &$page ) {
 
     $mandate = civicrm_api("SepaMandate","getsingle",array("version"=>3, "entity_table"=>"civicrm_contribution_recur", "entity_id"=>$recur["id"]));
     if (!array_key_exists("id",$mandate)) {
-        CRM_Core_Error::fatal(ts("Can't find the sepa mandate"));
+        CRM_Core_Error::fatal(ts("Can't find the sepa mandate", array('domain' => 'org.project60.sepa')));
     }
     $page->assign("sepa",$mandate);
     CRM_Core_Region::instance('page-body')->add(array(
@@ -219,31 +219,31 @@ function sepa_civicrm_options() {
           'is_active' => 1,
           'values' => array(
             'pain.008.001.02' => array(
-              'label' => ts('pain.008.001.02 (ISO 20022/official SEPA guidelines)'),
+              'label' => ts('pain.008.001.02 (ISO 20022/official SEPA guidelines)', array('domain' => 'org.project60.sepa')),
               'is_default' => 1,
               'is_reserved' => 1,
               'value' => 1,
             ),
             'pain.008.003.02' => array(
-              'label' => ts('pain.008.003.02 container core direct debit (CDC EBICS-2.7)'),
+              'label' => ts('pain.008.003.02 container core direct debit (CDC EBICS-2.7)', array('domain' => 'org.project60.sepa')),
               'is_default' => 0,
               'is_reserved' => 1,
               'value' => 2,
             ),
             'pain.008.003.02 COR1' => array(
-              'label' => ts('pain.008.003.02 COR1 direct debit (CD1 EBICS-2.7)'),
+              'label' => ts('pain.008.003.02 COR1 direct debit (CD1 EBICS-2.7)', array('domain' => 'org.project60.sepa')),
               'is_default' => 0,
               'is_reserved' => 1,
               'value' => 3,
             ),
             'citibankpl' => array(
-              'label' => ts('CitiBank PL direct debit'),
+              'label' => ts('CitiBank PL direct debit', array('domain' => 'org.project60.sepa')),
               'is_default' => 0,
               'is_reserved' => 1,
               'value' => 4,
             ),
             'bphpl' => array(
-              'label' => ts('Bank BPH PL direct debit'),
+              'label' => ts('Bank BPH PL direct debit', array('domain' => 'org.project60.sepa')),
               'is_default' => 0,
               'is_reserved' => 1,
               'value' => 5,
@@ -361,10 +361,10 @@ function sepa_civicrm_managed(&$entities) {
 function sepa_civicrm_links($op, $objectName, $objectId, &$links, &$mask, &$values) {
   if ($op == 'contact.selector.actions') {
     $links[] = array(
-      'name' => 'Record SEPA Contribution',
-      'url' => CRM_Utils_System::url('civicrm/sepa/cmandate', "cid=$objectId"),
-      'title' => 'Record SEPA Contribution',
-      'ref' => 'record-sepa-contribution',
+      'name'  => 'Record SEPA Contribution',
+      'url'   => CRM_Utils_System::url('civicrm/sepa/cmandate', "cid=$objectId"),
+      'title' => ts("Record SEPA Contribution", array('domain' => 'org.project60.sepa')),
+      'ref'   => 'record-sepa-contribution',
     );
   }
 }
@@ -378,7 +378,7 @@ function sepa_civicrm_merge ( $type, &$data, $mainId = NULL, $otherId = NULL, $t
     case 'relTables':
       // Offer user to merge SEPA Mandates
       $data['rel_table_sepamandate'] = array(
-          'title'  => ts('SEPA Mandates'),
+          'title'  => ts('SEPA Mandates', array('domain' => 'org.project60.sepa')),
           'tables' => array('civicrm_sdd_mandate'),
           'url'    => CRM_Utils_System::url('civicrm/contact/view', 'reset=1&cid=$cid&selectedChild=contribute'),  // '$cid' will be automatically replaced
       );
@@ -391,6 +391,26 @@ function sepa_civicrm_merge ( $type, &$data, $mainId = NULL, $otherId = NULL, $t
   }
 }
 
+/** 
+ * PREVENT the user to delete a (recurring) contribution when there's a mandate attached.
+ */
+function sepa_civicrm_pre($op, $objectName, $id, &$params) {
+  // FIXME: move this into validation?
+  // disallow the deletion of a (recurring) contribution if it is attached to mandates
+  if ($op=='delete' && ($objectName=='Contribution' || $objectName=='ContributionRecur')) {
+    if ($objectName=='Contribution') {
+      $table = 'civicrm_contribution';
+    } else {
+      $table = 'civicrm_contribution_recur';
+    }
+
+    $query = "SELECT id FROM civicrm_sdd_mandate WHERE entity_id=$id AND entity_table='$table';";
+    $result = CRM_Core_DAO::executeQuery($query);
+    if ($result->fetch()) {
+      die(sprintf(ts("You cannot delete this contribution because it is connected to SEPA mandate [%s]. Delete the mandate instead!", array('domain' => 'org.project60.sepa')), $result->id));
+    }
+  }
+}
 
 // totten's addition
 function sepa_civicrm_entityTypes(&$entityTypes) {
@@ -407,7 +427,7 @@ function sepa_civicrm_entityTypes(&$entityTypes) {
   );
   $entityTypes[] = array(
       'name' => 'SepaTransactionGroup',
-      'class' => 'CRM_Sepa_BAO_SEPATransactionGroup',
+      'class' => 'CRM_Sepa_DAO_SEPATransactionGroup',
       'table' => 'civicrm_sepa_txgroup',
   );
   $entityTypes[] = array(
@@ -472,6 +492,19 @@ function sepa_civicrm_navigationMenu(&$params) {
         'active' => 1
     );
     CRM_Utils_SepaMenuTools::addNavigationMenuEntry($params[$contributions_menu_id], $sepa_mandate_menu);
+    // add sepa import menu entry
+    $sepa_mandate_menu = array (
+        'label' => ts('CiviSEPA Import', array('domain' => 'org.project60.sepa')),
+        'name' => 'Import',
+        'url' => 'civicrm/sepa/import',
+        'permission' => 'administer CiviCRM',
+        'operator' => NULL,
+        'separator' => 0,
+        'parentID' => $contributions_menu_id,
+        'navID' => CRM_Utils_SepaMenuTools::createUniqueNavID($params),
+        'active' => 1
+    );
+    CRM_Utils_SepaMenuTools::addNavigationMenuEntry($params[$contributions_menu_id], $sepa_mandate_menu);
   }
   
   //add menu entry for SEPA settings to Administer>CiviContribute menu
@@ -518,6 +551,7 @@ function sepa_civicrm_alterAPIPermissions($entity, $action, &$params, &$permissi
   $permissions['sepa_alternative_batching']['received'] = array('edit contributions');
   $permissions['sepa_logic']['received'] = array('edit contributions');
   $permissions['sepa_transaction_group']['toaccgroup'] = array('edit contributions');
+  $permissions['sepa_mandate']['get'] = array('access CiviContribute');
 }
 
 
@@ -544,8 +578,8 @@ function sepa_civicrm_validateForm( $formName, &$fields, &$files, &$form, &$erro
     );
     $result = CRM_Core_DAO::executeQuery($query, $params);
     if ($result->fetch()) {
-      CRM_Core_Error::fatal(sprintf(ts("You cannot delete this contribution because it is connected to SEPA mandate [%s]. Delete the mandate instead!"), $result->id));
-      die(sprintf(ts("You cannot delete this contribution because it is connected to SEPA mandate [%s]. Delete the mandate instead!"), $result->id));
+      CRM_Core_Error::fatal(sprintf(ts("You cannot delete this contribution because it is connected to SEPA mandate [%s]. Delete the mandate instead!", array('domain' => 'org.project60.sepa')), $result->id));
+      die(sprintf(ts("You cannot delete this contribution because it is connected to SEPA mandate [%s]. Delete the mandate instead!", array('domain' => 'org.project60.sepa')), $result->id));
     }
   }
 
@@ -563,7 +597,7 @@ function sepa_civicrm_validateForm( $formName, &$fields, &$files, &$form, &$erro
       // the contribution has no mandate, 
       //   so we should not allow the payment_instrument be set to an SDD one
       if (CRM_Sepa_Logic_Settings::isSDD(array('payment_instrument_id' => $fields['payment_instrument_id']))) {
-        $errors['payment_instrument_id'] = ts("This contribution has no mandate and cannot simply be changed to a SEPA payment instrument.");
+        $errors['payment_instrument_id'] = ts("This contribution has no mandate and cannot simply be changed to a SEPA payment instrument.", array('domain' => 'org.project60.sepa'));
       }
 
     } else {
@@ -579,7 +613,85 @@ function sepa_civicrm_validateForm( $formName, &$fields, &$files, &$form, &$erro
       $mandate_pi = $mandates[$mandate_id];
       $requested_pi = CRM_Core_OptionGroup::getValue('payment_instrument', $fields['payment_instrument_id'], 'value', 'String', 'name');
       if ($requested_pi != $mandate_pi && !($requested_pi=='FRST' && $mandate_pi=='RCUR') ) {
-        $errors['payment_instrument_id'] = sprintf(ts("This contribution has a mandate, its payment instrument has to be '%s'"), $mandate_pi);
+        $errors['payment_instrument_id'] = sprintf(ts("This contribution has a mandate, its payment instrument has to be '%s'", array('domain' => 'org.project60.sepa')), $mandate_pi);
+      }
+    }
+  }
+}
+
+
+/**
+ * Insert "Last Mandate" tokens
+ */
+function sepa_civicrm_tokens(&$tokens) {
+  $prefix = ts("Most Recent SEPA Mandate", array('domain' => 'org.project60.sepa'));
+  $tokens[$prefix] = array(
+    "$prefix.reference"          => ts('Reference', array('domain' => 'org.project60.sepa')),
+    "$prefix.source"             => ts('Source', array('domain' => 'org.project60.sepa')),
+    "$prefix.type"               => ts('Type', array('domain' => 'org.project60.sepa')),
+    "$prefix.status"             => ts('Status', array('domain' => 'org.project60.sepa')),
+    "$prefix.date"               => ts('Signature Date', array('domain' => 'org.project60.sepa')),
+    "$prefix.iban"               => ts('IBAN', array('domain' => 'org.project60.sepa')),
+    "$prefix.bic"                => ts('BIC', array('domain' => 'org.project60.sepa')),
+    
+    "$prefix.amount"             => ts('Amount', array('domain' => 'org.project60.sepa')),
+    "$prefix.currency"           => ts('Currency', array('domain' => 'org.project60.sepa')),
+    "$prefix.first_collection"   => ts('First Collection Date', array('domain' => 'org.project60.sepa')),
+    "$prefix.cycle_day"          => ts('Cycle Day', array('domain' => 'org.project60.sepa')),
+    "$prefix.frequency_interval" => ts('Interval Multiplier', array('domain' => 'org.project60.sepa')),
+    "$prefix.frequency_unit"     => ts('Interval Unit', array('domain' => 'org.project60.sepa')),
+    "$prefix.frequency"          => ts('Interval', array('domain' => 'org.project60.sepa')),
+  );    
+}
+
+/**
+ * Fill "Last Mandate" tokens
+ */
+function sepa_civicrm_tokenValues(&$values, $cids, $job = null, $tokens = array(), $context = null) {
+  $prefix = ts("Most Recent SEPA Mandate", array('domain' => 'org.project60.sepa'));
+
+  // FIND most recent SEPA Mandates (per contact)
+  $contact_id_list = implode(',', $cids);
+  $query = "SELECT contact_id, MAX(id) AS mandate_id FROM civicrm_sdd_mandate WHERE contact_id IN ($contact_id_list) GROUP BY contact_id;";
+  $result = CRM_Core_DAO::executeQuery($query);
+  while ($result->fetch()) {
+    // load the mandate
+    $mandate = civicrm_api3('SepaMandate', 'getsingle', array('id' => $result->mandate_id));
+
+    // make sure there is an array
+    if (!isset($values[$result->contact_id])) {
+      $values[$result->contact_id] = array();
+    }
+
+    // copy the mandate values
+    $values[$result->contact_id]["$prefix.reference"] = $mandate['reference'];
+    $values[$result->contact_id]["$prefix.source"]    = $mandate['source'];
+    $values[$result->contact_id]["$prefix.type"]      = $mandate['type'];
+    $values[$result->contact_id]["$prefix.status"]    = $mandate['status'];
+    $values[$result->contact_id]["$prefix.date"]      = $mandate['date'];
+    $values[$result->contact_id]["$prefix.iban"]      = $mandate['iban'];
+    $values[$result->contact_id]["$prefix.bic"]       = $mandate['bic'];
+
+    // load and copy the contribution information
+    if ($mandate['entity_table'] == 'civicrm_contribution') {
+      $contribution = civicrm_api3('Contribution', 'getsingle', array('id' => $mandate['entity_id']));
+      $values[$result->contact_id]["$prefix.amount"]           = $contribution['total_amount'];
+      $values[$result->contact_id]["$prefix.currency"]         = $contribution['currency'];
+      $values[$result->contact_id]["$prefix.first_collection"] = $contribution['receive_date'];
+
+    } elseif ($mandate['entity_table'] == 'civicrm_contribution_recur') {
+      $rcontribution = civicrm_api3('ContributionRecur', 'getsingle', array('id' => $mandate['entity_id']));
+      $values[$result->contact_id]["$prefix.amount"]             = $rcontribution['amount'];
+      $values[$result->contact_id]["$prefix.currency"]           = $rcontribution['currency'];
+      $values[$result->contact_id]["$prefix.cycle_day"]          = $rcontribution['cycle_day'];
+      $values[$result->contact_id]["$prefix.frequency_interval"] = $rcontribution['frequency_interval'];
+      $values[$result->contact_id]["$prefix.frequency_unit"]     = $rcontribution['frequency_unit'];
+      $values[$result->contact_id]["$prefix.frequency"]          = CRM_Utils_SepaOptionGroupTools::getFrequencyText($rcontribution['frequency_interval'], $rcontribution['frequency_unit'], true);
+
+      // load first contribution
+      if (!empty($mandate['first_contribution_id'])) {
+        $fcontribution = civicrm_api3('Contribution', 'getsingle', array('id' => $mandate['first_contribution_id']));
+        $values[$result->contact_id]["$prefix.first_collection"] = $fcontribution['receive_date'];
       }
     }
   }
