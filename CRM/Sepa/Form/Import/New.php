@@ -121,6 +121,7 @@ class CRM_Sepa_Form_Import_New extends CRM_Core_Form {
       'creditor_id' => $this->controller->exportValue($this->_name, 'creditor_id'),
       'financial_type_id' => $this->controller->exportValue($this->_name, 'financial_type_id'),
       'campaign_id' => $this->controller->exportValue($this->_name, 'campaign_id'),
+      'campaign_title' => $this->campaigns[$this->controller->exportValue($this->_name, 'campaign_id')],
       'collection_day' => $this->controller->exportValue($this->_name, 'collection_day'),
       'start_date' => $this->controller->exportValue($this->_name, 'start_date'),
     );
