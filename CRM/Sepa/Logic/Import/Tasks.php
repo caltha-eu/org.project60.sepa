@@ -62,7 +62,7 @@ class CRM_Sepa_Logic_Import_Tasks {
     foreach ($batch as $id => $row) {
       $tx = new CRM_Core_Transaction();
       try {
-        $contactId = self::createContact($row);
+        $contactId = self::createContact($row, $params);
         $result = self::createMandate($row, $params, $contactId);
         CRM_Sepamandatebatch_Logic_Bankstatus::createActivity($result['id']);
         $log = array(
@@ -104,10 +104,11 @@ class CRM_Sepa_Logic_Import_Tasks {
    * Get or create if needed contact.
    *
    * @param array $row One row from import file
+   * @param array $importParams
    *
    * @return int Contact Id
    */
-  private static function createContact($row) {
+  private static function createContact($row, $importParams) {
     if ($row[CRM_Sepa_Logic_Import::$column['email']]) {
       $params = array(
         'sequential' => 1,
@@ -134,10 +135,10 @@ class CRM_Sepa_Logic_Import_Tasks {
         }
         return $contactId;
       } else {
-        return self::newContact($row);
+        return self::newContact($row, $importParams);
       }
     } else {
-      return self::newContact($row);
+      return self::newContact($row, $importParams);
     }
   }
 
@@ -146,11 +147,12 @@ class CRM_Sepa_Logic_Import_Tasks {
    * Create whole new contact.
    *
    * @param array $row
+   * @param array $importParams
    *
    * @return int
    * @throws \CiviCRM_API3_Exception
    */
-  private static function newContact($row) {
+  private static function newContact($row, $importParams) {
     $params = array(
       'sequential' => 1,
       'contact_type' => 'Individual',
@@ -158,6 +160,7 @@ class CRM_Sepa_Logic_Import_Tasks {
       'first_name' => $row[CRM_Sepa_Logic_Import::$column['first_name']],
       'last_name' => $row[CRM_Sepa_Logic_Import::$column['last_name']],
       'birth_date' => $row[CRM_Sepa_Logic_Import::$column['birth_date']],
+      'source' => ts('Campaign: %1', array('domain' => 'org.project60.sepa', 1 => $importParams['campaign_title'])),
       'api.Address.create' => array(
         'contact_id' => '$value.id',
         'location_type_id' => self::$location_type_id,
