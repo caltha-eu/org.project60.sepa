@@ -159,7 +159,7 @@ class CRM_Sepa_Logic_Import_Tasks {
       'first_name' => $row[CRM_Sepa_Logic_Import::$column['first_name']],
       'last_name' => $row[CRM_Sepa_Logic_Import::$column['last_name']],
       'birth_date' => $row[CRM_Sepa_Logic_Import::$column['birth_date']],
-      'source' => $importParams['campaign_title'],
+      'source' => ts('Campaign: %1', array('domain' => 'org.project60.sepa', 1 => $importParams['campaign_title'])),
       'api.Address.create' => array(
         'contact_id' => '$value.id',
         'location_type_id' => self::$location_type_id,
