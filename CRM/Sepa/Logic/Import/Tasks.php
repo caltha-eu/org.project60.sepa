@@ -173,6 +173,8 @@ class CRM_Sepa_Logic_Import_Tasks {
       $params['api.Phone.create'] = array(
         'contact_id' => '$value.id',
         'phone' => $row[CRM_Sepa_Logic_Import::$column['phone']],
+        'location_type_id' => 4, // Other
+        'phone_type_id' => 1, // Phone
       );
     }
     $result = civicrm_api3('Contact', 'create', $params);
