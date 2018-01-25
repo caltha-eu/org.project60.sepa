@@ -55,8 +55,8 @@ class CRM_Sepa_BAO_SEPASddFile extends CRM_Sepa_DAO_SEPASddFile {
     $txgroup = new CRM_Sepa_BAO_SEPATransactionGroup();
     $txgroup->sdd_file_id=$this->id;
     $txgroup->find();
-    $total =0; 
-    $nbtransactions =0; 
+    $total =0;
+    $nbtransactions =0;
     $fileFormats = array();
     while ($txgroup->fetch()) {
       $xml .= $txgroup->generateXML();
@@ -70,7 +70,7 @@ class CRM_Sepa_BAO_SEPASddFile extends CRM_Sepa_DAO_SEPASddFile {
       $fileFormatName = CRM_Sepa_Logic_Format::sanitizeFileFormat(reset($fileFormats));
     }
     $template->assign("file",$this->toArray());
-    $template->assign("total",$total );
+    $template->assign("total", number_format($total, 2, '.', '')); // SEPA-432: two-digit decimals
     $template->assign("nbtransactions",$nbtransactions);
     $head = $template->fetch('../formats/'.$fileFormatName.'/transaction-header.tpl');
     $footer = $template->fetch('../formats/'.$fileFormatName.'/transaction-footer.tpl');

@@ -6,7 +6,7 @@ This branch is currently maintained by Xavier Dutoit (TTTP, xavier@tttp.eu) and 
 
 Find more documentation on http://wiki.civicrm.org/confluence/display/CRM/CiviSEPA
 
-**Important:** Please download a [official release](https://github.com/Project60/org.project60.sepa/releases)! Don't use the ``master`` branch unless you want bleeding edge and you know what you're doing.
+**Important:** Please download a [official release](https://github.com/Project60/org.project60.sepa/releases)!
 
 # What it can do
 

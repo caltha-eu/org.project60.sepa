@@ -73,7 +73,7 @@ class CRM_Sepa_BAO_SEPATransactionGroup extends CRM_Sepa_DAO_SEPATransactionGrou
     $queryParams= array (1=>array($this->id, 'Positive'));
     $query="
       SELECT
-        c.id AS contribution_id,
+        c.id AS cid,
         civicrm_contact.display_name,
         a.street_address,
         a.postal_code,
@@ -104,6 +104,7 @@ class CRM_Sepa_BAO_SEPATransactionGroup extends CRM_Sepa_DAO_SEPATransactionGrou
  
     while ($contrib->fetch()) {
       $t=$contrib->toArray();
+      $t['id'] = $t['cid'];  // see https://github.com/Project60/org.project60.sepa/issues/385
       $t["iban"]=str_replace(array(' ','-'), '', $t["iban"]);
       
       // try to convert the name into a more acceptable format
@@ -118,6 +119,11 @@ class CRM_Sepa_BAO_SEPATransactionGroup extends CRM_Sepa_DAO_SEPATransactionGrou
       // create an individual transaction message
       $t["message"] = CRM_Sepa_Logic_Settings::getTransactionMessage($t, $creditor);
 
+      // create an individual EndToEndId
+      $end2endID = $t['id']; // that's the old default
+      CRM_Utils_SepaCustomisationHooks::modify_endtoendid($end2endID, $t, $creditor);
+      $t["end2endID"] = $end2endID;
+
       $r[]=$t;
       if ($creditor_id == null) {
         $creditor_id = $contrib->creditor_id;
@@ -130,7 +136,7 @@ class CRM_Sepa_BAO_SEPATransactionGroup extends CRM_Sepa_DAO_SEPATransactionGrou
       $this->total += $contrib->total_amount;
       $this->nbtransactions++;
     }
-    $template->assign("total",$this->total );
+    $template->assign("total", number_format($this->total, 2, '.', '')); // SEPA-432: two-digit decimals
     $template->assign("nbtransactions",$this->nbtransactions);
     $template->assign("contributions",$r);
 

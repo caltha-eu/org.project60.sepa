@@ -33,8 +33,7 @@
       </CdtrAgt>
       <ChrgBr>SLEV</ChrgBr>
       <CdtrSchmeId>
-{if $fileFormat != 'pain.008.003.02' and $fileFormat != 'pain.008.003.02 COR1'}
-{* Element doesn't exist in German non-standard. *}
+{if $fileFormat == 'pain.008.001.02'}{* legacy pain.008.001.02 format *}
         <Nm>{$creditor.name}</Nm>
 {/if}
         <Id>
@@ -52,7 +51,7 @@
 {foreach from=$contributions item="contribution"}
       <DrctDbtTxInf>
         <PmtId>
-          <EndToEndId>{$contribution.id}</EndToEndId>
+          <EndToEndId>{$contribution.end2endID}</EndToEndId>
         </PmtId>
         <InstdAmt Ccy="{$contribution.currency}">{$contribution.total_amount}</InstdAmt>
         <DrctDbtTx>

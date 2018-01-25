@@ -75,6 +75,8 @@ class CRM_Sepa_Page_CreateMandate extends CRM_Core_Page {
       // error -> no parameters set
       die(ts("This page cannot be called w/o parameters.", array('domain' => 'org.project60.sepa')));
     }
+
+    $this->assign('bic_extension_installed', CRM_Sepa_Logic_Settings::isLittleBicExtensionAccessible());
     parent::run();
   }
 
@@ -135,24 +137,27 @@ class CRM_Sepa_Page_CreateMandate extends CRM_Core_Page {
       return;
     }
 
-    // create a note, if requested
-    if ($_REQUEST['note']) {
-      // add note
-      $create_note = array(
-        'version'                   => 3,
-        'entity_table'              => $entity_table,
-        'entity_id'                 => $contribution['id'],
-        'note'                      => $_REQUEST['note'],
-        'privacy'                   => 0,
-      );
+    // FIXME: see https://github.com/Project60/org.project60.sepa/issues/401
+    //  BUT: probably unused...
+    
+    // // create a note, if requested
+    // if ($_REQUEST['note']) {
+    //   // add note
+    //   $create_note = array(
+    //     'version'                   => 3,
+    //     'entity_table'              => $entity_table,
+    //     'entity_id'                 => $contribution['id'],
+    //     'note'                      => $_REQUEST['note'],
+    //     'privacy'                   => 0,
+    //   );
 
-      $create_note_result = civicrm_api('Note', 'create', $create_note);
-      if (isset($create_note_result['is_error']) && $create_note_result['is_error']) {
-        // don't consider this a fatal error...
-        CRM_Core_Session::setStatus(sprintf(ts("Couldn't create note for contribution #%s", array('domain' => 'org.project60.sepa')), $contribution['id']), ts('Error', array('domain' => 'org.project60.sepa')), 'alert');
-        error_log("org.project60.sepa_dd: error creating note - ".$create_note_result['error_message']);
-      }
-    }
+    //   $create_note_result = civicrm_api('Note', 'create', $create_note);
+    //   if (isset($create_note_result['is_error']) && $create_note_result['is_error']) {
+    //     // don't consider this a fatal error...
+    //     CRM_Core_Session::setStatus(sprintf(ts("Couldn't create note for contribution #%s", array('domain' => 'org.project60.sepa')), $contribution['id']), ts('Error', array('domain' => 'org.project60.sepa')), 'alert');
+    //     error_log("org.project60.sepa_dd: error creating note - ".$create_note_result['error_message']);
+    //   }
+    // }
 
     // next, create mandate
     $mandate_data = array(
@@ -237,7 +242,7 @@ class CRM_Sepa_Page_CreateMandate extends CRM_Core_Page {
 
     // look up account in other SEPA mandates
     $known_accounts = array();
-    $query_sql = "SELECT DISTINCT iban, bic FROM civicrm_sdd_mandate WHERE contact_id=$contact_id AND (creation_date >= (NOW() - INTERVAL 60 DAY));";
+    $query_sql = "SELECT DISTINCT iban, bic FROM civicrm_sdd_mandate WHERE contact_id=$contact_id ORDER BY creation_date DESC;";
     $old_mandates = CRM_Core_DAO::executeQuery($query_sql);
     while ($old_mandates->fetch()) {
       $value = $old_mandates->iban.'/'.$old_mandates->bic;
