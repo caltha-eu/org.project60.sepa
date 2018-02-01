@@ -85,8 +85,8 @@ class CRM_Sepa_Logic_Batching {
       LEFT  JOIN civicrm_contribution       AS first_contribution  ON mandate.first_contribution_id = first_contribution.id
       WHERE mandate.type = 'RCUR'
         AND mandate.status = '$mode'
-        AND mandate.creditor_id = $creditor_id . $format::$generatexml_sql_where
-        {$batch_clause};";
+        AND mandate.creditor_id = $creditor_id" . $format::$generatexml_sql_where .
+        " {$batch_clause};";
     $results = CRM_Core_DAO::executeQuery($sql_query);
     $relevant_mandates = array();
     while ($results->fetch()) {
