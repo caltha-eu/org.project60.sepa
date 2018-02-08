@@ -252,7 +252,7 @@ function sepa_civicrm_options() {
               'label' => ts('pain.008.001.02 (CDD EBICS-3.0)', array('domain' => 'org.project60.sepa')),
               'is_default' => 1,
               'is_reserved' => 1,
-              'value' => 4,
+              'value' => 6,
             ),
           ),
         ),
