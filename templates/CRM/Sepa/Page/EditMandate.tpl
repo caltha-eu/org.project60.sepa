@@ -133,8 +133,7 @@
               <a class="button" onclick="mandate_action_restore();">{ts domain="org.project60.sepa"}Restore{/ts}</a>
             </td>
             <td>
-              <label for="restore_noe">{ts domain="org.project60.sepa"}Note:{/ts}</label>
-              <input type="text" id="restore_noe" name="restore_note" size="32" />
+              Restore mandate to previous bank status.
             </td>
           </tr>
           {/if}
