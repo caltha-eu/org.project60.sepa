@@ -60,8 +60,7 @@ class CRM_Sepa_Page_EditMandate extends CRM_Core_Page {
         $this->suspend($mandate_id, $restoreDate, $note);
       }
       else if ($_REQUEST['action'] == 'restore') {
-        $note = $_REQUEST['restore_note'];
-        $this->restore($mandate_id, $note);
+        $this->restore($mandate_id);
       }
       else {
         CRM_Core_Session::setStatus(sprintf(ts("Unkown action '%s'. Ignored.", array('domain' => 'org.project60.sepa')), $_REQUEST['action']), ts('Error', array('domain' => 'org.project60.sepa')), 'error');
@@ -316,11 +315,10 @@ class CRM_Sepa_Page_EditMandate extends CRM_Core_Page {
    *
    * @throws \CiviCRM_API3_Exception
    */
-  private function restore($mandateId, $note) {
+  private function restore($mandateId) {
     $params = [
       'sequential' => 1,
       'mandate_id' => $mandateId,
-      'note' => $note,
     ];
     $result = civicrm_api3('Sepamandatebatch', 'restore', $params);
     CRM_Core_Session::setStatus('Przywrócono deklarację PZ...');
