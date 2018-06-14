@@ -176,6 +176,17 @@ class CRM_Sepa_DAO_SEPAMandate extends CRM_Core_DAO
    * @var datetime
    */
   public $validation_date;
+
+  /**
+   * @var int unsigned
+   */
+  public $bank_status;
+
+  /**
+   * @var datetime
+   */
+  public $bank_status_date;
+
   /**
    * class constructor
    *
@@ -327,7 +338,21 @@ class CRM_Sepa_DAO_SEPAMandate extends CRM_Core_DAO
           'name' => 'validation_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('validation date', array('domain' => 'org.project60.sepa')) ,
-        ) ,
+        ),
+        'bank_status' => array(
+          'name' => 'bank_status',
+          'type' => CRM_Utils_Type::T_INT,
+          'title' => ts('Bank status', array('domain' => 'org.project60.sepa')) ,
+          'export' => TRUE,
+          'where' => 'civicrm_sdd_mandate.bank_status',
+        ),
+        'bank_status_date' => array(
+          'name' => 'bank_status_date',
+          'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
+          'title' => ts('Date of change of bank status', array('domain' => 'org.project60.sepa')) ,
+          'export' => TRUE,
+          'where' => 'civicrm_sdd_mandate.bank_status_date',
+        ),
       );
     }
     return self::$_fields;
@@ -358,6 +383,8 @@ class CRM_Sepa_DAO_SEPAMandate extends CRM_Core_DAO
         'creation_date' => 'creation_date',
         'first_contribution_id' => 'first_contribution_id',
         'validation_date' => 'validation_date',
+        'bank_status' => 'bank_status',
+        'bank_status_date' => 'bank_status_date',
       );
     }
     return self::$_fieldKeys;
