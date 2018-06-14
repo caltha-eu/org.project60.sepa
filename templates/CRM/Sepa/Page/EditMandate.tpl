@@ -118,8 +118,8 @@
               <a class="button" onclick="mandate_action_suspend();">{ts domain="org.project60.sepa"}Suspend{/ts}</a>
             </td>
             <td>
-              <label for="suspend_date">{ts domain="org.project60.sepa"}Suspend to:{/ts}</label>
-              <input type="text" name="suspend_date" id="suspend_date" size="12" value="" />
+              <label for="restore_date">{ts domain="org.project60.sepa"}Suspend to:{/ts}</label>
+              <input type="text" name="restore_date" id="restore_date" size="12" value="" />
               <br/>
               <label for="suspend_noe">{ts domain="org.project60.sepa"}Note:{/ts}</label>
               <input type="text" id="suspend_noe" name="suspend_note" size="32" />
@@ -247,8 +247,8 @@ cj('#replace_date').addClass('dateplugin');
 cj('#replace_date').datepicker(dateOptions);
 cj('#end_date').addClass('dateplugin');
 cj('#end_date').datepicker(dateOptions);
-cj('#suspend_date').addClass('dateplugin');
-cj('#suspend_date').datepicker(dateOptions);
+cj('#restore_date').addClass('dateplugin');
+cj('#restore_date').datepicker(dateOptions);
 </script>
 {/literal}
 
