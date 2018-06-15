@@ -62,7 +62,13 @@ class CRM_Sepa_Page_EditMandate extends CRM_Core_Page {
       else if ($_REQUEST['action'] == 'suspend') {
         $restoreDate = $_REQUEST['restore_date'];
         $note = $_REQUEST['suspend_note'];
-        $this->suspend($mandate_id, $restoreDate, $note);
+        if ($restoreDate && $note) {
+          $this->suspend($mandate_id, $restoreDate, $note);
+        }
+        else {
+          CRM_Core_Session::setStatus('Podaj datę, do której deklaracja ma być zawieszona oraz wpisz wyjaśnienie w polu Notatki', '', 'error');
+        }
+
       }
       else if ($_REQUEST['action'] == 'restore') {
         $this->restore($mandate_id);
@@ -376,7 +382,7 @@ class CRM_Sepa_Page_EditMandate extends CRM_Core_Page {
       'note' => $note,
     ];
     $result = civicrm_api3('Sepamandatebatch', 'suspend', $params);
-    CRM_Core_Session::setStatus('Zawieszono deklarację PZ...');
+    CRM_Core_Session::setStatus('Zawieszono deklarację PZ.', '', 'success');
   }
 
   /**
@@ -391,7 +397,7 @@ class CRM_Sepa_Page_EditMandate extends CRM_Core_Page {
       'mandate_id' => $mandateId,
     ];
     $result = civicrm_api3('Sepamandatebatch', 'restore', $params);
-    CRM_Core_Session::setStatus('Przywrócono deklarację PZ...');
+    CRM_Core_Session::setStatus('Przywrócono deklarację PZ.', '', 'success');
   }
 
 }
