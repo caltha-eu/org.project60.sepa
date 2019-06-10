@@ -480,7 +480,7 @@ function sepa_civicrm_navigationMenu(&$params) {
     // add sepa dashboard menu entry
     $sepa_dashboard_menu = array (
         'label' => ts('CiviSEPA Dashboard',array('domain' => 'org.project60.sepa')),
-        'name' => 'Dashboard',
+        'name' => 'CiviSEPA Dashboard',
         'url' => $sepa_dashboard_url,
         'permission' => 'administer CiviCRM',
         'operator' => NULL,
