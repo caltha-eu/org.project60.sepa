@@ -17,6 +17,8 @@ commands:
         default: http://localhost:8080
     steps:
       - run: |
+          composer self-update 1.4.1
+          composer update
           civiver=<< parameters.version >>
           if [[ "$civiver" == "stable" ]]; then
             civiver=$(curl -s 'https://latest.civicrm.org/stable.php')
