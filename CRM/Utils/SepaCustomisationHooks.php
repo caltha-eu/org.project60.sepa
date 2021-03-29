@@ -45,7 +45,7 @@ class CRM_Utils_SepaCustomisationHooks {
     {
         return CRM_Utils_Hook::singleton()->invoke(1, $mandate_parameters, self::$null, self::$null, self::$null, self::$null, 'civicrm_create_mandate');
     }else{
-        return CRM_Utils_Hook::singleton()->invoke(1, $mandate_parameters, self::$null, self::$null, self::$null, self::$null, self::$null, 'civicrm_create_mandate');
+        return CRM_Utils_Hook::singleton()->invoke(['mandate_parameters'], $mandate_parameters, self::$null, self::$null, self::$null, self::$null, self::$null, 'civicrm_create_mandate');
     }
   }
 
@@ -69,7 +69,7 @@ class CRM_Utils_SepaCustomisationHooks {
     {
       return CRM_Utils_Hook::singleton()->invoke(4, $reference, $creditor_id, $mode, $collection_date, self::$null, 'civicrm_modify_txgroup_reference');
     }else{
-      return CRM_Utils_Hook::singleton()->invoke(4, $reference, $creditor_id, $mode, $collection_date, self::$null, self::$null, 'civicrm_modify_txgroup_reference');
+      return CRM_Utils_Hook::singleton()->invoke(['reference', 'creditor_id', 'mode', 'collection_date'], $reference, $creditor_id, $mode, $collection_date, self::$null, self::$null, 'civicrm_modify_txgroup_reference');
     }
   }
 
@@ -91,7 +91,7 @@ class CRM_Utils_SepaCustomisationHooks {
     {
       return CRM_Utils_Hook::singleton()->invoke(3, $txmessage, $contribution, $creditor, self::$null, self::$null, 'civicrm_modify_txmessage');
     }else{
-      return CRM_Utils_Hook::singleton()->invoke(3, $txmessage, $contribution, $creditor, self::$null, self::$null, self::$null, 'civicrm_modify_txmessage');
+      return CRM_Utils_Hook::singleton()->invoke(['txmessage', 'contribution', 'creditor'], $txmessage, $contribution, $creditor, self::$null, self::$null, self::$null, 'civicrm_modify_txmessage');
     }
   }
 
@@ -111,7 +111,7 @@ class CRM_Utils_SepaCustomisationHooks {
     {
       return CRM_Utils_Hook::singleton()->invoke(3, $end2endID, $contribution, $creditor, self::$null, self::$null, 'civicrm_modify_endtoendid');
     }else{
-      return CRM_Utils_Hook::singleton()->invoke(3, $end2endID, $contribution, $creditor, self::$null, self::$null, self::$null, 'civicrm_modify_endtoendid');
+      return CRM_Utils_Hook::singleton()->invoke(['end2endID', 'contribution', 'creditor'], $end2endID, $contribution, $creditor, self::$null, self::$null, self::$null, 'civicrm_modify_endtoendid');
     }
   }
 
@@ -130,7 +130,7 @@ class CRM_Utils_SepaCustomisationHooks {
     {
       return CRM_Utils_Hook::singleton()->invoke(2, $rcontribId, $rcontrib, self::$null, self::$null, self::$null, 'civicrm_mend_rcontrib');
     }else{
-      return CRM_Utils_Hook::singleton()->invoke(2, $rcontribId, $rcontrib, self::$null, self::$null, self::$null, self::$null, 'civicrm_mend_rcontrib');
+      return CRM_Utils_Hook::singleton()->invoke(['rcontribId', 'rcontrib'], $rcontribId, $rcontrib, self::$null, self::$null, self::$null, self::$null, 'civicrm_mend_rcontrib');
     }
   }
 
@@ -150,7 +150,7 @@ class CRM_Utils_SepaCustomisationHooks {
     {
       return CRM_Utils_Hook::singleton()->invoke(2, $collection_date, $creditor_id, self::$null, self::$null, self::$null, 'civicrm_defer_collection_date');
     }else{
-      return CRM_Utils_Hook::singleton()->invoke(2, $collection_date, $creditor_id, self::$null, self::$null, self::$null, self::$null, 'civicrm_defer_collection_date');
+      return CRM_Utils_Hook::singleton()->invoke(['collection_date', 'creditor_id'], $collection_date, $creditor_id, self::$null, self::$null, self::$null, self::$null, 'civicrm_defer_collection_date');
     }
   }
 
@@ -175,7 +175,7 @@ class CRM_Utils_SepaCustomisationHooks {
     {
       return CRM_Utils_Hook::singleton()->invoke(3, $mandate_id, $contribution_recur_id, $contribution_id, self::$null, self::$null, 'civicrm_installment_created');
     }else{
-      return CRM_Utils_Hook::singleton()->invoke(3, $mandate_id, $contribution_recur_id, $contribution_id, self::$null, self::$null, self::$null, 'civicrm_installment_created');
+      return CRM_Utils_Hook::singleton()->invoke(['mandate_id', 'contribution_recur_id', 'contribution_id'], $mandate_id, $contribution_recur_id, $contribution_id, self::$null, self::$null, self::$null, 'civicrm_installment_created');
     }
   }
 }
