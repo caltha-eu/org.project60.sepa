@@ -333,9 +333,9 @@ class SEPA_BatchingTest extends SEPA_BaseTestCase {
     $this->assertDBQuery(NULL, 'delete from civicrm_contribution;', array());
 
     // read the payment instrument ids
-    $payment_instrument_FRST = (int) CRM_Core_OptionGroup::getValue('payment_instrument', 'FRST', 'name');
+    $payment_instrument_FRST = (int) CRM_Core_PseudoConstant::getKey('CRM_Contribute_BAO_Contribution', 'payment_instrument_id', 'FRST');
     $this->assertNotEmpty($payment_instrument_FRST, "Could not find the 'FRST' payment instrument.");
-    $payment_instrument_RCUR = (int) CRM_Core_OptionGroup::getValue('payment_instrument', 'RCUR', 'name');
+    $payment_instrument_RCUR = (int) CRM_Core_PseudoConstant::getKey('CRM_Contribute_BAO_Contribution', 'payment_instrument_id', 'RCUR');
     $this->assertNotEmpty($payment_instrument_RCUR, "Could not find the 'RCUR' payment instrument.");
 
     // backup contribution count
@@ -385,7 +385,7 @@ class SEPA_BatchingTest extends SEPA_BaseTestCase {
    */
   public function testFRSTtoRCURswitch() {
     // select cycle day so that the submission would be due today
-    $frst_payment_instrument = (int) CRM_Core_OptionGroup::getValue('payment_instrument', 'FRST', 'name');
+    $frst_payment_instrument = (int) CRM_Core_PseudoConstant::getKey('CRM_Contribute_BAO_Contribution', 'payment_instrument_id', 'FRST');
     $this->assertNotEmpty($frst_payment_instrument, "Payment Instrument FRST not found!");    
 
     $frst_notice = CRM_Core_BAO_Setting::getItem('SEPA Direct Debit Preferences', 'batching_FRST_notice');
@@ -436,7 +436,7 @@ class SEPA_BatchingTest extends SEPA_BaseTestCase {
       $this->assertEquals($frst_payment_instrument, $contribution['payment_instrument_id'], "Created contribution does not have payment instrument 'FRST'!");
     } else {
       // CiviCRM <= 4.4 doesn't have $contribution['payment_instrument_id']
-      $payment_instrument_id = (int) CRM_Core_OptionGroup::getValue('payment_instrument', 'FRST', 'name');
+      $payment_instrument_id = (int) CRM_Core_PseudoConstant::getKey('CRM_Contribute_BAO_Contribution', 'payment_instrument_id', 'FRST');
       $this->assertEquals($frst_payment_instrument, $payment_instrument_id, "Created contribution does not have payment instrument 'FRST'!");
     }
 

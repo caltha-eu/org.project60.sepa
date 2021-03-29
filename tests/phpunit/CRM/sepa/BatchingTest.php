@@ -564,9 +564,9 @@ class CRM_sepa_BatchingTest extends CRM_sepa_BaseTestCase {
    */
   public function testCorrectPaymentInstrumentSet() {
     // read the payment instrument ids  
-    $payment_instrument_FRST = (int) CRM_Core_OptionGroup::getValue('payment_instrument', 'FRST', 'name');
+    $payment_instrument_FRST = (int) CRM_Core_PseudoConstant::getKey('CRM_Contribute_BAO_Contribution', 'payment_instrument_id', 'FRST');
     $this->assertNotEmpty($payment_instrument_FRST, "Could not find the 'FRST' payment instrument.");
-    $payment_instrument_RCUR = (int) CRM_Core_OptionGroup::getValue('payment_instrument', 'RCUR', 'name');
+    $payment_instrument_RCUR = (int) CRM_Core_PseudoConstant::getKey('CRM_Contribute_BAO_Contribution', 'payment_instrument_id', 'RCUR');
     $this->assertNotEmpty($payment_instrument_RCUR, "Could not find the 'RCUR' payment instrument.");
 
     // create a contact

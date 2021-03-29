@@ -43,7 +43,7 @@ class CRM_Sepa_Logic_Batching {
     $now = strtotime("$now +$rcur_notice days -$grace_period days");
     $now = strtotime(date('Y-m-d', $now));        // round to full day
     $group_status_id_open = (int) CRM_Core_OptionGroup::getValue('batch_status', 'Open', 'name');
-    $payment_instrument_id = (int) CRM_Core_OptionGroup::getValue('payment_instrument', $mode, 'name');
+    $payment_instrument_id = (int) CRM_Core_PseudoConstant::getKey('CRM_Contribute_BAO_Contribution', 'payment_instrument_id', $mode);
 
     $creditor = civicrm_api3("SepaCreditor", "getsingle", array("sequential" => 1, "id" => $creditor_id));
     $fileFormat = CRM_Core_OptionGroup::getValue('sepa_file_format', $creditor['sepa_file_format_id'], 'value', 'Integer', 'name');

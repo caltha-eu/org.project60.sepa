@@ -313,7 +313,7 @@ function civicrm_api3_sepa_transaction_group_toaccgroup($params) {
                   'mode_id'               => (int) CRM_Core_OptionGroup::getValue('batch_mode', 'Automatic Batch', 'name'),
                   'total'                 => $total,
                   'item_count'            => count($transactions),
-                  'payment_instrument_id' => (int) CRM_Core_OptionGroup::getValue('payment_instrument', $txgroup['type'], 'name'),
+                  'payment_instrument_id' => (int) CRM_Core_PseudoConstant::getKey('CRM_Contribute_BAO_Contribution', 'payment_instrument_id', $txgroup['type']),
                   'exported_date'         => $sdd_file['created_date'],
                   'version'               => 3);
   $batch_create = civicrm_api('Batch', 'create', $batch);
