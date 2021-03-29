@@ -35,6 +35,8 @@ class CRM_Sepa_Page_DeleteGroup extends CRM_Core_Page {
         $this->assign('txgid', $group_id);
         $txgroup = civicrm_api('SepaTransactionGroup', 'getsingle', array('id'=>$group_id, 'version'=>3));
         if (empty($txgroup['is_error'])) {
+          // fixme label i name nie są obsługiwane przez CRM_Core_PseudoConstant akurat w tym przypadku
+          //  CRM_Core_PseudoConstant::getName('CRM_Batch_BAO_Batch', 'status_id', 'Open') - zwraca NULL
           $txgroup['status_label'] = CRM_Core_OptionGroup::getValue('batch_status', $txgroup['status_id'], 'value', 'String', 'label');
 	        $txgroup['status_name']  = CRM_Core_OptionGroup::getValue('batch_status', $txgroup['status_id'], 'value', 'String', 'name');
 	        $this->assign('txgroup', $txgroup);

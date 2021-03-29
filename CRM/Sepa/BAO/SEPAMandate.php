@@ -223,7 +223,7 @@ class CRM_Sepa_BAO_SEPAMandate extends CRM_Sepa_DAO_SEPAMandate {
 
     // check if it's not in a closed group (should not be possible, but just to be sure...)
     $contribution_id = $mandate['entity_id'];
-    $group_status_id_open = (int) CRM_Core_OptionGroup::getValue('batch_status', 'Open', 'name');
+    $group_status_id_open = (int) CRM_Core_PseudoConstant::getKey('CRM_Batch_BAO_Batch', 'status_id', 'Open');
     $is_in_closed_group = CRM_Core_DAO::singleValueQuery("
       SELECT COUNT(civicrm_sdd_contribution_txgroup.id) 
       FROM civicrm_sdd_contribution_txgroup 

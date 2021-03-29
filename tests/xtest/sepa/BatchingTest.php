@@ -187,7 +187,7 @@ class SEPA_BatchingTest extends SEPA_BaseTestCase {
     // check txgroup attributes
     $searchParams = array(
       "id" => $txgid,
-      "status_id" => (int) CRM_Core_OptionGroup::getValue('batch_status', 'Received', 'name')
+      "status_id" => (int) CRM_Core_PseudoConstant::getKey('CRM_Batch_BAO_Batch', 'status_id', 'Received')
     );
     $this->assertDBCompareValues("CRM_Sepa_DAO_SEPATransactionGroup", array("id" => $txgid), $searchParams);
   }

@@ -46,7 +46,7 @@ class CRM_Sepa_Logic_Queue_Close {
       'option.limit' => 0
       ));
 
-    $group_status_id_busy = (int) CRM_Core_OptionGroup::getValue('batch_status', 'Data Entry', 'name');
+    $group_status_id_busy = (int) CRM_Core_PseudoConstant::getKey('CRM_Batch_BAO_Batch', 'status_id', 'Data Entry');
 
     foreach ($txgroup_query['values'] as $txgroup) {
       // first: set group status to busy

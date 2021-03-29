@@ -186,7 +186,7 @@ class CRM_Sepa_BAO_SEPATransactionGroup extends CRM_Sepa_DAO_SEPATransactionGrou
         }
       }
 
-      $group_status_id_closed = (int) CRM_Core_OptionGroup::getValue('batch_status', 'Closed', 'name');
+      $group_status_id_closed = (int) CRM_Core_PseudoConstant::getKey('CRM_Batch_BAO_Batch', 'status_id', 'Closed');
 
       // now that we found an available reference, create the file
       $sepa_file = civicrm_api('SepaSddFile', 'create', array(
