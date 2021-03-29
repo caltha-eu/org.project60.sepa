@@ -248,7 +248,7 @@ class CRM_Sepa_BAO_SEPAMandate extends CRM_Sepa_DAO_SEPAMandate {
     }
 
     // then: cancel the associated contribution
-    $contribution_id_cancelled = (int) CRM_Core_OptionGroup::getValue('contribution_status', 'Cancelled', 'name');
+    $contribution_id_cancelled = (int) CRM_Core_PseudoConstant::getKey('CRM_Contribute_BAO_Contribution', 'contribution_status_id', 'Cancelled');
     $result = civicrm_api('Contribution', 'create', array(
       'version'                   => 3,
       'id'                        => $contribution_id,
@@ -274,7 +274,7 @@ class CRM_Sepa_BAO_SEPAMandate extends CRM_Sepa_DAO_SEPAMandate {
    * @author endres -at- systopia.de 
    */
   static function terminateMandate($mandate_id, $new_end_date_str, $cancel_reason=NULL) {
-    $contribution_id_pending = CRM_Core_OptionGroup::getValue('contribution_status', 'Pending', 'name');
+    $contribution_id_pending = CRM_Core_PseudoConstant::getKey('CRM_Contribute_BAO_Contribution', 'contribution_status_id', 'Pending');
     // use a lock, in case somebody is batching just now
     $lock = CRM_Sepa_Logic_Settings::getLock();
     if (empty($lock)) {
@@ -411,7 +411,7 @@ class CRM_Sepa_BAO_SEPAMandate extends CRM_Sepa_DAO_SEPAMandate {
    */
   static function adjustAmount($mandate_id, $adjusted_amount) {
     $adjusted_amount = (float) $adjusted_amount;
-    $contribution_id_pending = CRM_Core_OptionGroup::getValue('contribution_status', 'Pending', 'name');
+    $contribution_id_pending = CRM_Core_PseudoConstant::getKey('CRM_Contribute_BAO_Contribution', 'contribution_status_id', 'Pending');
 
     // use a lock, in case somebody is batching just now
     $lock = CRM_Sepa_Logic_Settings::getLock();

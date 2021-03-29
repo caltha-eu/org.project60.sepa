@@ -295,7 +295,7 @@ class CRM_sepa_BatchingTest extends CRM_sepa_BaseTestCase {
     // check whether the contribution has been marked as "in progress"
     $searchParams = array(
       "id" => 1,
-      "contribution_status_id" => (int) CRM_Core_OptionGroup::getValue('contribution_status', 'In Progress', 'name')
+      "contribution_status_id" => (int) CRM_Core_PseudoConstant::getKey('CRM_Contribute_BAO_Contribution', 'contribution_status_id', 'In Progress')
     );
     $this->assertDBCompareValues("CRM_Contribute_DAO_Contribution", array("id" => 1), $searchParams);
   }
@@ -416,7 +416,7 @@ class CRM_sepa_BatchingTest extends CRM_sepa_BaseTestCase {
     // Check whether contribution has been flagged as ended
     $searchParams = array(
       "id" => 1,
-      "contribution_status_id" => (int) CRM_Core_OptionGroup::getValue('contribution_status', 'Completed', 'name')
+      "contribution_status_id" => (int) CRM_Core_PseudoConstant::getKey('CRM_Contribute_BAO_Contribution', 'contribution_status_id', 'Completed')
     );
     $this->assertDBCompareValues("CRM_Contribute_DAO_ContributionRecur", array("id" => 1), $searchParams);
   }

@@ -87,8 +87,8 @@ class CRM_Sepa_Page_CreateMandate extends CRM_Core_Page {
    */
   function createMandate($type) {
     // first create a contribution
-    $payment_instrument_id = CRM_Core_OptionGroup::getValue('payment_instrument', $type, 'name');
-    $contribution_status_id = CRM_Core_OptionGroup::getValue('contribution_status', 'Pending', 'name');
+    $payment_instrument_id  = CRM_Core_PseudoConstant::getKey('CRM_Contribute_BAO_Contribution', 'payment_instrument_id', $type);
+    $contribution_status_id = CRM_Core_PseudoConstant::getKey('CRM_Contribute_BAO_Contribution', 'contribution_status_id', 'Pending');
 
     $params = array(
       'id' => $_REQUEST['creditor_id'],

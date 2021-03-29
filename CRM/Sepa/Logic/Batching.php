@@ -348,7 +348,7 @@ class CRM_Sepa_Logic_Batching {
       return "Batching in progress. Please try again later.";
     }
 
-    $contribution_status_closed = (int) CRM_Core_OptionGroup::getValue('contribution_status', 'Completed', 'name');
+    $contribution_status_closed = (int) CRM_Core_PseudoConstant::getKey('CRM_Contribute_BAO_Contribution', 'contribution_status_id', 'Completed');
 
     // first, load all of the mandates, that have run out
     $sql_query = "

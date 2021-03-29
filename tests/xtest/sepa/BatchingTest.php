@@ -129,7 +129,7 @@ class SEPA_BatchingTest extends SEPA_BaseTestCase {
     // check whether the contribution has been marked as "in progress"
     $searchParams = array(
       "id" => $contribid,
-      "contribution_status_id" => (int) CRM_Core_OptionGroup::getValue('contribution_status', 'In Progress', 'name')
+      "contribution_status_id" => (int) CRM_Core_PseudoConstant::getKey('CRM_Contribute_BAO_Contribution', 'contribution_status_id', 'In Progress')
     );
     $this->assertDBCompareValues("CRM_Contribute_DAO_Contribution", array("id" => $contribid), $searchParams);
   }
@@ -240,7 +240,7 @@ class SEPA_BatchingTest extends SEPA_BaseTestCase {
     $cid = CRM_Core_DAO::singleValueQuery('select MIN(id) from civicrm_contribution_recur;', array());
     $searchParams = array(
       "id" => $cid ,
-      "contribution_status_id" => (int) CRM_Core_OptionGroup::getValue('contribution_status', 'Completed', 'name')
+      "contribution_status_id" => (int) CRM_Core_PseudoConstant::getKey('CRM_Contribute_BAO_Contribution', 'contribution_status_id', 'Completed')
     );
     $this->assertDBCompareValues("CRM_Contribute_DAO_ContributionRecur", array("id" => $cid), $searchParams);
   }

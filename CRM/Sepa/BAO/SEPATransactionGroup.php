@@ -285,7 +285,7 @@ class CRM_Sepa_BAO_SEPATransactionGroup extends CRM_Sepa_DAO_SEPATransactionGrou
     if ($delete_contributions_mode == 'no') {
       $contributions_deleted = array();
     } elseif ($delete_contributions_mode == 'open') {
-      $status_id_pending = (int) CRM_Core_OptionGroup::getValue('contribution_status', 'Pending', 'name');
+      $status_id_pending = (int) CRM_Core_PseudoConstant::getKey('CRM_Contribute_BAO_Contribution', 'contribution_status_id', 'Pending');
       $contributions_deleted = self::_deleteGroupContents($txgroup_id, $txgroup['type'], "civicrm_contribution.contribution_status_id = $status_id_pending");
     } elseif ($delete_contributions_mode == 'all') {
       $contributions_deleted = self::_deleteGroupContents($txgroup_id, $txgroup['type'], "TRUE");
