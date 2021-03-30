@@ -277,30 +277,30 @@ class CRM_Admin_Form_Setting_SepaSettings extends CRM_Admin_Form_Setting
         // save field values
         foreach ($this->config_fields as $key => $value) {
             if(array_key_exists($this->domainToString($value[0]), $values)) {
-                CRM_Core_BAO_Setting::setItem($values[$this->domainToString($value[0])], 'SEPA Direct Debit Preferences', $this->domainToString($value[0]));
-            }  
+              Civi::settings()->set($this->domainToString($value[0]), $values[$this->domainToString($value[0])]);
+            }
         }
 
         // save general config options:
         // default creditor
-        CRM_Core_BAO_Setting::setItem($values['batching_default_creditor'], 'SEPA Direct Debit Preferences', 'batching_default_creditor');
-        CRM_Core_BAO_Setting::setItem($values['default_mandate_type'], 'SEPA Direct Debit Preferences', 'default_mandate_type');
+        Civi::settings()->set('batching_default_creditor', $values['batching_default_creditor']);
+        Civi::settings()->set('default_mandate_type', $values['default_mandate_type']);
 
         // mandate modification
         $allow_mandate_modification = empty($values['allow_mandate_modification'])?'0':'1';
-        CRM_Core_BAO_Setting::setItem($allow_mandate_modification, 'SEPA Direct Debit Preferences', 'allow_mandate_modification');
+        Civi::settings()->set('allow_mandate_modification', $allow_mandate_modification);
 
-        CRM_Core_BAO_Setting::setItem((isset($values['exclude_weekends'])     ? "1" : "0"), 'SEPA Direct Debit Preferences', 'exclude_weekends');
-        CRM_Core_BAO_Setting::setItem((isset($values['sdd_async_batching'])   ? "1" : "0"), 'SEPA Direct Debit Preferences', 'sdd_async_batching');
-        CRM_Core_BAO_Setting::setItem((isset($values['sdd_skip_closed'])      ? "1" : "0"), 'SEPA Direct Debit Preferences', 'sdd_skip_closed');
-        CRM_Core_BAO_Setting::setItem((isset($values['sdd_no_draft_xml'])     ? "1" : "0"), 'SEPA Direct Debit Preferences', 'sdd_no_draft_xml');
-        CRM_Core_BAO_Setting::setItem((isset($values['pp_hide_bic'])          ? "1" : "0"), 'SEPA Direct Debit Preferences', 'pp_hide_bic');
-        CRM_Core_BAO_Setting::setItem((isset($values['pp_hide_billing'])      ? "1" : "0"), 'SEPA Direct Debit Preferences', 'pp_hide_billing');
-        CRM_Core_BAO_Setting::setItem((isset($values['pp_improve_frequency']) ? "1" : "0"), 'SEPA Direct Debit Preferences', 'pp_improve_frequency');
-        CRM_Core_BAO_Setting::setItem((isset($values['multi_currency_field']) ? 1 : 0), 'SEPA Direct Debit Preferences', 'multi_currency');
-        CRM_Core_BAO_Setting::setItem((isset($values['pp_buffer_days'])       ? (int) $values['pp_buffer_days'] : "0"), 'SEPA Direct Debit Preferences', 'pp_buffer_days');
+        Civi::settings()->set('exclude_weekends', (isset($values['exclude_weekends']) ? "1" : "0"));
+        Civi::settings()->set('sdd_async_batching', (isset($values['sdd_async_batching']) ? "1" : "0"));
+        Civi::settings()->set('sdd_skip_closed', (isset($values['sdd_skip_closed']) ? "1" : "0"));
+        Civi::settings()->set('sdd_no_draft_xml', (isset($values['sdd_no_draft_xml']) ? "1" : "0"));
+        Civi::settings()->set('pp_hide_bic', (isset($values['pp_hide_bic']) ? "1" : "0"));
+        Civi::settings()->set('pp_hide_billing', (isset($values['pp_hide_billing']) ? "1" : "0"));
+        Civi::settings()->set('pp_improve_frequency', (isset($values['pp_improve_frequency']) ? "1" : "0"));
+        Civi::settings()->set('multi_currency', (isset($values['multi_currency_field']) ? 1 : 0));
+        Civi::settings()->set('pp_buffer_days', (isset($values['pp_buffer_days']) ? (int) $values['pp_buffer_days'] : "0"));
 
-        // save import settings
+      // save import settings
         foreach ($this->import_fields as $key => $field) {
             CRM_Core_BAO_Setting::setItem($values[$key], 'SEPA Direct Debit Preferences', $key);
         }

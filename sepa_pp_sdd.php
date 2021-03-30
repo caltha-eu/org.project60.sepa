@@ -203,8 +203,8 @@ function sepa_pp_postProcess( $formName, &$form ) {
 
 			// save settings
 			// FIXME: we might consider saving this as a JSON object
-			CRM_Core_BAO_Setting::setItem($creditor_id,      'SEPA Direct Debit PP', 'pp'.$pp_id);
-			CRM_Core_BAO_Setting::setItem($test_creditor_id, 'SEPA Direct Debit PP', 'pp_test'.$pp_id);
+      Civi::settings()->set('pp'.$pp_id, $creditor_id);
+      Civi::settings()->set('pp_test'.$pp_id, $test_creditor_id);
 		}
 
 	} elseif ('CRM_Contribute_Form_Contribution_Confirm' == $formName) {
