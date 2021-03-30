@@ -235,7 +235,7 @@ class CRM_Sepa_Upgrader_Base {
     // CRM_Core_BAO_Extension::setSchemaVersion($this->extensionName, $revision);
 
     $key = $this->extensionName . ':version';
-    CRM_Core_BAO_Setting::setItem($revision, 'Extension', $key);
+    Civi::settings()->set($key, $revision);
     return TRUE;
   }
 

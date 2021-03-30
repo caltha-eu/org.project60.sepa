@@ -302,7 +302,7 @@ class CRM_Admin_Form_Setting_SepaSettings extends CRM_Admin_Form_Setting
 
       // save import settings
         foreach ($this->import_fields as $key => $field) {
-            CRM_Core_BAO_Setting::setItem($values[$key], 'SEPA Direct Debit Preferences', $key);
+          Civi::settings()->set($key, $values[$key]);
         }
 
         $session = CRM_Core_Session::singleton();
