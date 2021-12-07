@@ -203,19 +203,19 @@ class CRM_Sepa_DAO_SEPAMandate extends CRM_Core_DAO
    *
    * @static
    * @access public
-   * @return array of CRM_Core_EntityReference
+   * @return array
    */
   static function getReferenceColumns()
   {
-    if (!self::$_links) {
-      self::$_links = array(
-        new CRM_Core_EntityReference(self::getTableName() , 'creditor_id', 'civicrm_sdd_creditor', 'id') ,
-        new CRM_Core_EntityReference(self::getTableName() , 'contact_id', 'civicrm_contact', 'id') ,
-        new CRM_Core_EntityReference(self::getTableName() , 'first_contribution_id', 'civicrm_contribution', 'id') ,
-        new CRM_Core_EntityReference(self::getTableName() , 'entity_id', NULL, 'id', 'entity_table') ,
-      );
+    if (!isset(Civi::$statics[__CLASS__]['links'])) {
+      Civi::$statics[__CLASS__]['links'] = static::createReferenceColumns(__CLASS__);
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName(), 'creditor_id', 'civicrm_sdd_creditor', 'id');
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName(), 'contact_id', 'civicrm_contact', 'id');
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName(), 'first_contribution_id', 'civicrm_contribution', 'id');
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Dynamic(self::getTableName(), 'entity_id', NULL, 'id', 'entity_table');
+      CRM_Core_DAO_AllCoreTables::invoke(__CLASS__, 'links_callback', Civi::$statics[__CLASS__]['links']);
     }
-    return self::$_links;
+    return Civi::$statics[__CLASS__]['links'];
   }
   /**
    * returns all the column names of this table

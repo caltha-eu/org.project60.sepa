@@ -189,18 +189,18 @@ class CRM_Sepa_DAO_SEPACreditor extends CRM_Core_DAO
    *
    * @static
    * @access public
-   * @return array of CRM_Core_EntityReference
+   * @return array
    */
   static function getReferenceColumns()
   {
-    if (!self::$_links) {
-      self::$_links = array(
-        new CRM_Core_EntityReference(self::getTableName() , 'creditor_id', 'civicrm_contact', 'id') ,
-        new CRM_Core_EntityReference(self::getTableName() , 'country_id', 'civicrm_country', 'id') ,
-        new CRM_Core_EntityReference(self::getTableName() , 'payment_processor_id', 'civicrm_payment_processor', 'id') ,
-      );
+    if (!isset(Civi::$statics[__CLASS__]['links'])) {
+      Civi::$statics[__CLASS__]['links'] = static::createReferenceColumns(__CLASS__);
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName(), 'creditor_id', 'civicrm_contact', 'id');
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName(), 'country_id', 'civicrm_country', 'id');
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName(), 'payment_processor_id', 'civicrm_payment_processor', 'id');
+      CRM_Core_DAO_AllCoreTables::invoke(__CLASS__, 'links_callback', Civi::$statics[__CLASS__]['links']);
     }
-    return self::$_links;
+    return Civi::$statics[__CLASS__]['links'];
   }
   /**
    * returns all the column names of this table
