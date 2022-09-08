@@ -1,6 +1,6 @@
 {foreach from=$contributions item="contribution"}
 0
-{$contribution.contribution_id|mb_truncate:10:"":true:false}
+{$contribution.id|mb_truncate:10:"":true:false}
 1
 {$contribution.iban|regex_replace:'/[A-Z][A-Z]/':""}
 2
@@ -17,6 +17,6 @@
 {$contribution.receive_date|date_format:"%d/%m/%y"}
 8
 {$contribution.reference|mb_truncate:20:"":true:false}
-{'ID'|cat:$contribution.contribution_id|mb_truncate:35:"":true:false}
+{'ID'|cat:$contribution.id|mb_truncate:35:"":true:false}
 -1
 {/foreach}
