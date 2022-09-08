@@ -157,13 +157,13 @@
 </table>
 
 {literal}
-<style>
-  tr.submit_missed {background-color: #EE0000AA;}
-  tr.submit_urgently {background-color: #AC6700AA;}
-  tr.submit_soon {background-color: #0165FFAA;}
-  tr.submit_later {background-color: #008300AA;}
-  tr.submit_closed {background-color: #00830033;}
-</style>
+  <style>
+    tr.submit_missed {color: #EE0000;}
+    tr.submit_urgently {color: #ac6700;}
+    tr.submit_soon {color: #0165FF;}
+    tr.submit_later {color: #008300;}
+    tr.submit_closed {color: inherit;}
+  </style>
 {/literal}
 
 <script type="text/javascript">
