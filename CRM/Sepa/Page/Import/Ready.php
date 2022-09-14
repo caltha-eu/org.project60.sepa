@@ -11,6 +11,7 @@ class CRM_Sepa_Page_Import_Ready extends CRM_Core_Page {
     $this->assign('rows', count($data));
 
     $queue = CRM_Sepa_Logic_Import_Queue::singleton()->getQueue();
+    $queue->deleteQueue();
     if (!$queue->numberOfItems()) {
       $settings = CRM_Sepa_Logic_Import::getSettings();
       $result = civicrm_api3('SepaCreditor', 'get', array('sequential' => 1, 'id' => $params['creditor_id'], 'return' => 'currency'));
