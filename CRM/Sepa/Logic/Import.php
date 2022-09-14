@@ -76,7 +76,7 @@ abstract class CRM_Sepa_Logic_Import {
       'import_contact_custom_field' => null,
     );
     foreach ($keys as $key => $val) {
-      $value = CRM_Core_BAO_Setting::getItem('SEPA Direct Debit Preferences', $key);
+      $value = CRM_Sepa_Logic_Settings::getSetting($key);
       $keys[$key] = $value;
     }
     return $keys;

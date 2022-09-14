@@ -260,7 +260,7 @@ class CRM_Admin_Form_Setting_SepaSettings extends CRM_Core_Form
 
         // import settings
         foreach ($this->import_fields as $key => $field) {
-          $value = CRM_Core_BAO_Setting::getItem('SEPA Direct Debit Preferences', $key);
+          $value = CRM_Sepa_Logic_Settings::getSetting($key);
           $this->addElement($field['type'], $key, $field['label'], $field['options'])->setValue($value);
         }
 
@@ -305,7 +305,7 @@ class CRM_Admin_Form_Setting_SepaSettings extends CRM_Core_Form
 
         // save import settings
         foreach ($this->import_fields as $key => $field) {
-            CRM_Core_BAO_Setting::setItem($values[$key], 'SEPA Direct Debit Preferences', $key);
+          CRM_Sepa_Logic_Settings::setSetting($values[$key], $key);
         }
 
         $session = CRM_Core_Session::singleton();
