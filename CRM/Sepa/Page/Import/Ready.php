@@ -4,9 +4,6 @@ require_once 'CRM/Core/Page.php';
 
 class CRM_Sepa_Page_Import_Ready extends CRM_Core_Page {
 
-  // todo later : move param to import settings (default 50)
-  private $batchSize = 50;
-
   function run() {
     $session = new CRM_Core_Session();
     $data = $session->get('data', 'sepa-import');
@@ -26,9 +23,11 @@ class CRM_Sepa_Page_Import_Ready extends CRM_Core_Page {
 
       $this->addTaskStarting($queue);
 
-      $batches = ceil(count($data) / $this->batchSize);
+      $import_batch_size = (int)$settings['import_batch_size'];
+
+      $batches = ceil(count($data) / $import_batch_size);
       for ($i = 1; $i <= $batches; $i++) {
-        $batch = array_slice($data, $i * $this->batchSize - $this->batchSize, $this->batchSize, TRUE);
+        $batch = array_slice($data, $i * $import_batch_size - $import_batch_size, $import_batch_size, TRUE);
         $this->addTaskCreateMandate($queue, $batch, $i, $batches);
       }
     }

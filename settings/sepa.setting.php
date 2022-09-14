@@ -423,4 +423,18 @@ return array(
     'description' => 'Optional custom field (column name) for contact used during import mandates from file.',
     'help_text' => 'Optional custom field (column name) for contact used during import mandates from file.',
   ),
+  'import_batch_size' => array(
+    'group_name' => 'SEPA Direct Debit Preferences',
+    'group' => 'org.project60',
+    'name' => 'import_batch_size',
+    'type' => 'Integer',
+    'html_type' => 'Select',
+    'default' => 50,
+    'add' => '4.6',
+    'is_domain' => 1,
+    'is_contact' => 0,
+    'title' => 'Batch size',
+    'description' => 'Batch size',
+    'help_text' => 'Batch size',
+  ),
 );

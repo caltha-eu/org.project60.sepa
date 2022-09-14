@@ -412,6 +412,12 @@ div.sdd-add-creditor {
               {$form.import_contact_custom_field.html}
             </td>
           </tr>
+          <tr class="crm-import-form-block-campaign-id">
+              <td class="label">{$form.import_batch_size.label} <a onclick='CRM.help("{ts domain="org.project60.sepa"}Batch size{/ts}", {literal}{"id":"id-batch-size","file":"CRM\/Admin\/Form\/Setting\/SepaSettings"}{/literal}); return false;' href="#" title="{ts domain="org.project60.sepa"}Help{/ts}" class="helpicon">&nbsp;</a></td>
+              <td>
+                  {$form.import_batch_size.html}
+              </td>
+          </tr>
        </table>
        <br/>
       <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>

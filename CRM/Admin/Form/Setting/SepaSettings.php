@@ -89,6 +89,11 @@ class CRM_Admin_Form_Setting_SepaSettings extends CRM_Core_Form
           'label' => E::ts("Contact custom field", array('domain' => 'org.project60.sepa')),
           'options' => array(),
         ),
+        'import_batch_size' => array(
+          'type' => 'text',
+          'label' => E::ts("Import batch size", array('domain' => 'org.project60.sepa')),
+          'options' => array(),
+        ),
       );
     }
 
