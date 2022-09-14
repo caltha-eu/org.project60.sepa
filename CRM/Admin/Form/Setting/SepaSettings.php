@@ -51,42 +51,42 @@ class CRM_Admin_Form_Setting_SepaSettings extends CRM_Core_Form
       $this->import_fields = array(
         'import_financial_type_id' => array(
           'type' => 'text',
-          'label' => ts("Financial type id", array('domain' => 'org.project60.sepa')),
+          'label' => E::ts("Financial type id", array('domain' => 'org.project60.sepa')),
           'options' => array(),
         ),
         'import_campaign_id' => array(
           'type' => 'text',
-          'label' => ts("Campaign id", array('domain' => 'org.project60.sepa')),
+          'label' => E::ts("Campaign id", array('domain' => 'org.project60.sepa')),
           'options' => array(),
         ),
         'import_collection_day' => array(
           'type' => 'text',
-          'label' => ts("Collection day", array('domain' => 'org.project60.sepa')),
+          'label' => E::ts("Collection day", array('domain' => 'org.project60.sepa')),
           'options' => array(),
         ),
         'import_interval' => array(
           'type' => 'text',
-          'label' => ts("Interval", array('domain' => 'org.project60.sepa')),
+          'label' => E::ts("Interval", array('domain' => 'org.project60.sepa')),
           'options' => array(),
         ),
         'import_date_format' => array(
           'type' => 'text',
-          'label' => ts("Date format", array('domain' => 'org.project60.sepa')),
+          'label' => E::ts("Date format", array('domain' => 'org.project60.sepa')),
           'options' => array(),
         ),
         'import_thousands_delimiter' => array(
           'type' => 'text',
-          'label' => ts("Thousands delimiter", array('domain' => 'org.project60.sepa')),
+          'label' => E::ts("Thousands delimiter", array('domain' => 'org.project60.sepa')),
           'options' => array(),
         ),
         'import_decimal_delimiter' => array(
           'type' => 'text',
-          'label' => ts("Decimal delimiter", array('domain' => 'org.project60.sepa')),
+          'label' => E::ts("Decimal delimiter", array('domain' => 'org.project60.sepa')),
           'options' => array(),
         ),
         'import_contact_custom_field' => array(
           'type' => 'text',
-          'label' => ts("Contact custom field", array('domain' => 'org.project60.sepa')),
+          'label' => E::ts("Contact custom field", array('domain' => 'org.project60.sepa')),
           'options' => array(),
         ),
       );

@@ -394,7 +394,7 @@ function sepa_civicrm_navigationMenu(&$menu) {
   ));
   
   _sepa_civix_insert_navigation_menu($menu,'Contributions',array(
-    'label' => ts('CiviSEPA Import', array('domain' => 'org.project60.sepa')),
+    'label' => E::ts('CiviSEPA Import', array('domain' => 'org.project60.sepa')),
     'name' => 'Import',
     'url' => 'civicrm/sepa/import',
     'permission' => 'administer CiviCRM',
@@ -406,7 +406,7 @@ function sepa_civicrm_navigationMenu(&$menu) {
   $sepa_settings_url = 'civicrm/admin/setting/sepa';
 
   _sepa_civix_insert_navigation_menu($menu, 'Administer/CiviContribute',array (
-        'label' => ts('CiviSEPA Settings',array('domain' => 'org.project60.sepa')),
+        'label' => E::ts('CiviSEPA Settings',array('domain' => 'org.project60.sepa')),
         'name' => 'CiviSEPA Settings',
         'url' => $sepa_settings_url,
         'permission' => 'administer CiviCRM',

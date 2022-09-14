@@ -1,5 +1,7 @@
 <?php
 
+use CRM_Sepa_ExtensionUtil as E;
+
 abstract class CRM_Sepa_Logic_Import {
 
   public static $errors = array();
@@ -102,7 +104,7 @@ abstract class CRM_Sepa_Logic_Import {
       }
     }
     if (!self::validateUniqueReference($content)) {
-      self::$errors[] = array('line' => 0, 'message' => ts('Mandate references are not unique in file', array('domain' => 'org.project60.sepa')));
+      self::$errors[] = array('line' => 0, 'message' => E::ts('Mandate references are not unique in file', array('domain' => 'org.project60.sepa')));
     }
     return !count(self::$errors);
   }
@@ -118,24 +120,24 @@ abstract class CRM_Sepa_Logic_Import {
   private static function validateRow($row) {
     foreach (self::$required as $key => $requ) {
       if ($requ && !$row[self::$column[$key]]) {
-        self::$error_message = ts('Required field %1 is not set', array('domain' => 'org.project60.sepa', 1 => $key));
+        self::$error_message = E::ts('Required field %1 is not set', array('domain' => 'org.project60.sepa', 1 => $key));
         return false;
       }
       if (in_array($key, array_keys(self::$re)) && $row[self::$column[$key]]) {
         if (!preg_match(self::$re[$key], $row[self::$column[$key]])) {
-          self::$error_message = ts('Field %1 has wrong format', array('domain' => 'org.project60.sepa', 1 => $key));
+          self::$error_message = E::ts('Field %1 has wrong format', array('domain' => 'org.project60.sepa', 1 => $key));
           return false;
         }
       }
       if ($key == 'amount') {
         if (!self::validateAmount($row[self::$column[$key]])) {
-          self::$error_message = ts('Amount "%1" has wrong format', array('domain' => 'org.project60.sepa', 1 => $row[self::$column[$key]]));
+          self::$error_message = E::ts('Amount "%1" has wrong format', array('domain' => 'org.project60.sepa', 1 => $row[self::$column[$key]]));
           return false;
         }
       }
       if ($key == 'reference' && $row[self::$column[$key]]) {
         if (!self::validateReference($row[self::$column[$key]])) {
-          self::$error_message = ts('Mandate reference "%1" already exists', array('domain' => 'org.project60.sepa', 1 => $row[self::$column[$key]]));
+          self::$error_message = E::ts('Mandate reference "%1" already exists', array('domain' => 'org.project60.sepa', 1 => $row[self::$column[$key]]));
           return false;
         }
       }

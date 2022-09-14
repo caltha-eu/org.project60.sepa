@@ -1,5 +1,7 @@
 <?php
 
+use CRM_Sepa_ExtensionUtil as E;
+
 require_once 'CRM/Core/Form.php';
 
 /**
@@ -36,37 +38,37 @@ class CRM_Sepa_Form_Import_New extends CRM_Core_Form {
     $this->fields = array(
       'creditor_id' => array(
         'type' => 'Select',
-        'label' => ts("Creditor", array('domain' => 'org.project60.sepa')),
+        'label' => E::ts("Creditor", array('domain' => 'org.project60.sepa')),
         'options' => array(),
         'required' => true,
       ),
       'financial_type_id' => array(
         'type' => 'Select',
-        'label' => ts("Financial Type", array('domain' => 'org.project60.sepa')),
+        'label' => E::ts("Financial Type", array('domain' => 'org.project60.sepa')),
         'options' => array(),
         'required' => true,
       ),
       'campaign_id' => array(
         'type' => 'Select',
-        'label' => ts("Campaign", array('domain' => 'org.project60.sepa')),
+        'label' => E::ts("Campaign", array('domain' => 'org.project60.sepa')),
         'options' => array(),
         'required' => true, // fixme seems not to be required when CiviCampaign is not installed
       ),
       'collection_day' => array(
         'type' => 'text',
-        'label' => ts("Collection day", array('domain' => 'org.project60.sepa')),
+        'label' => E::ts("Collection day", array('domain' => 'org.project60.sepa')),
         'options' => array(),
         'required' => true,
       ),
       'start_date' => array(
         'type' => 'text',
-        'label' => ts("Start date", array('domain' => 'org.project60.sepa')),
+        'label' => E::ts("Start date", array('domain' => 'org.project60.sepa')),
         'options' => array(),
         'required' => true,
       ),
       'importFile' => array(
         'type' => 'File',
-        'label' => ts("Import file", array('domain' => 'org.project60.sepa')),
+        'label' => E::ts("Import file", array('domain' => 'org.project60.sepa')),
         'options' => array(),
         'required' => true,
       ),
@@ -106,12 +108,12 @@ class CRM_Sepa_Form_Import_New extends CRM_Core_Form {
       $uploadFileSize = 8388608;
     }
     $uploadSize = round(($uploadFileSize / (1024 * 1024)), 2);
-    $this->addRule('importFile', ts('A valid file must be uploaded.'), 'uploadedfile');
-    $this->addRule('importFile', ts('File size should be less than %1 MBytes (%2 bytes)', array(1 => $uploadSize, 2 => $uploadFileSize)), 'maxfilesize', $uploadFileSize);
+    $this->addRule('importFile', E::ts('A valid file must be uploaded.'), 'uploadedfile');
+    $this->addRule('importFile', E::ts('File size should be less than %1 MBytes (%2 bytes)', array(1 => $uploadSize, 2 => $uploadFileSize)), 'maxfilesize', $uploadFileSize);
     $this->setMaxFileSize($uploadFileSize);
-    $this->addRule('importFile', ts('Input file must be in CSV format'), 'utf8File');
+    $this->addRule('importFile', E::ts('Input file must be in CSV format'), 'utf8File');
 
-    $this->addButtons(array(array('type' => 'upload', 'name' => ts('Submit'), 'isDefault' => TRUE)));
+    $this->addButtons(array(array('type' => 'upload', 'name' => E::ts('Submit'), 'isDefault' => TRUE)));
     $this->assign('elementNames', $this->getRenderableElementNames());
   }
 
