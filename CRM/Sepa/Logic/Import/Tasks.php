@@ -244,6 +244,25 @@ class CRM_Sepa_Logic_Import_Tasks {
       'campaign_id' => $params['campaign_id'],
       'currency' => $params['currency'],
     );
+
+    $contact_custom_field = $row[CRM_Sepa_Logic_Import::$column['contact_custom_field']] ?? null;
+    $field = CRM_Sepa_Logic_Settings::getSetting('contact_custom_field');
+
+    if( $field || $contact_custom_field )
+    {
+      if( !$contact_custom_field )
+      {
+        throw new CiviCRM_API3_Exception("Optional custom field for contact was not set in CSV file but defined in settings.");
+      }
+
+      if( !$field )
+      {
+        throw new CiviCRM_API3_Exception("Optional custom field contact was set in CSV file but not defined in settings.");
+      }
+
+      $params_mandate[$field] = $contact_custom_field;
+    }
+
     $result = civicrm_api3('SepaMandate', 'createfull', $params_mandate);
     return $result;
   }
