@@ -133,6 +133,16 @@ class CRM_Sepa_DAO_SEPAMandate extends CRM_Core_DAO {
   public $validation_date;
 
   /**
+   * @var int unsigned
+   */
+  public $bank_status;
+
+  /**
+   * @var datetime
+   */
+  public $bank_status_date;
+
+  /**
    * Class constructor.
    */
   public function __construct() {
@@ -382,6 +392,30 @@ class CRM_Sepa_DAO_SEPAMandate extends CRM_Core_DAO {
           'bao' => 'CRM_Sepa_DAO_SEPAMandate',
           'localizable' => 0,
           'add' => '4.3',
+        ],
+        'bank_status' => [
+          'name' => 'bank_status',
+          'type' => CRM_Utils_Type::T_INT,
+          'title' => E::ts('Bank status') ,
+          'export' => TRUE,
+          'where' => 'civicrm_sdd_mandate.bank_status',
+          'table_name' => 'civicrm_sdd_mandate',
+          'entity' => 'SEPAMandate',
+          'bao' => 'CRM_Sepa_DAO_SEPAMandate',
+          'localizable' => 0,
+          'add' => NULL,
+        ],
+        'bank_status_date' => [
+          'name' => 'bank_status_date',
+          'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
+          'title' => E::ts('Date of change of bank status'),
+          'export' => TRUE,
+          'where' => 'civicrm_sdd_mandate.bank_status_date',
+          'table_name' => 'civicrm_sdd_mandate',
+          'entity' => 'SEPAMandate',
+          'bao' => 'CRM_Sepa_DAO_SEPAMandate',
+          'localizable' => 0,
+          'add' => NULL,
         ],
       ];
       CRM_Core_DAO_AllCoreTables::invoke(__CLASS__, 'fields_callback', Civi::$statics[__CLASS__]['fields']);
