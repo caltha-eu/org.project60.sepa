@@ -71,6 +71,10 @@ class CRM_Sepa_BAO_SEPATransactionGroup extends CRM_Sepa_DAO_SEPATransactionGrou
     $template->assign('group',    $group);
     $template->assign('creditor', $creditor);
 
+    // load file format class
+    $fileFormatName = CRM_Core_PseudoConstant::getName('CRM_Sepa_BAO_SEPACreditor', 'sepa_file_format_id', $creditor['sepa_file_format_id']);
+    $fileFormat = CRM_Sepa_Logic_Format::loadFormatClass($fileFormatName);
+
     $queryParams= array (1=>array($this->id, 'Positive'));
     $query="
       SELECT
@@ -104,6 +108,7 @@ class CRM_Sepa_BAO_SEPATransactionGroup extends CRM_Sepa_DAO_SEPATransactionGrou
       WHERE g.txgroup_id = %1
         AND c.contribution_status_id != 3
         AND mandate.is_enabled = true
+        " . $fileFormat::$generatexml_sql_where . "
       GROUP BY c.id"; //and not cancelled
     $contrib = CRM_Core_DAO::executeQuery($query, $queryParams);
 
@@ -152,9 +157,7 @@ class CRM_Sepa_BAO_SEPATransactionGroup extends CRM_Sepa_DAO_SEPATransactionGrou
     $template->assign("nbtransactions", $this->nbtransactions);
     $template->assign("contributions", $r);
 
-    // load file format class
-    $fileFormatName = CRM_Core_PseudoConstant::getName('CRM_Sepa_BAO_SEPACreditor', 'sepa_file_format_id', $creditor['sepa_file_format_id']);
-    $fileFormat = CRM_Sepa_Logic_Format::loadFormatClass($fileFormatName);
+
     $fileFormat->assignExtraVariables($template);
 
     // render file

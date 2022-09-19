@@ -65,6 +65,14 @@ class CRM_Sepa_Logic_Batching {
     );
 
 
+    // load file format class
+    $creditor = civicrm_api3("SepaCreditor", "getsingle", [
+      "sequential" => 1,
+      "id" => $creditor_id
+    ]);
+    $fileFormatName = CRM_Core_PseudoConstant::getName('CRM_Sepa_BAO_SEPACreditor', 'sepa_file_format_id', $creditor['sepa_file_format_id']);
+    $fileFormat = CRM_Sepa_Logic_Format::loadFormatClass($fileFormatName);
+
     // RCUR-STEP 1: find all active/pending RCUR mandates within the horizon that are NOT in a closed batch
     $sql_query = "
       SELECT
@@ -94,6 +102,7 @@ class CRM_Sepa_Logic_Batching {
       WHERE mandate.type = 'RCUR'
         AND mandate.status = '{$mode}'
         AND mandate.creditor_id = {$creditor_id}
+        " . $fileFormat::$generatexml_sql_where . "
         {$batch_clause};";
     $results = CRM_Core_DAO::executeQuery($sql_query);
     $relevant_mandates = array();
