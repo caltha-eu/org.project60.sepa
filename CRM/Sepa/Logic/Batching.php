@@ -102,7 +102,7 @@ class CRM_Sepa_Logic_Batching {
       WHERE mandate.type = 'RCUR'
         AND mandate.status = '{$mode}'
         AND mandate.creditor_id = {$creditor_id}
-        " . $fileFormat::$generatexml_sql_where . "
+        " . ( $fileFormat::$generatexml_sql_where ?? '' ) . "
         {$batch_clause};";
     $results = CRM_Core_DAO::executeQuery($sql_query);
     $relevant_mandates = array();
