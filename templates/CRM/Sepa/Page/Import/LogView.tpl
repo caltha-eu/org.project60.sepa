@@ -16,7 +16,8 @@
 <h3>Stats for import <strong>{$import_hash}</strong></h3>
 <table>
   <tr><th>Status</th><th>Count</th></tr>
-  <tr><td>OK</td><td>{$ok}</td></tr>
+  <tr><td>New</td><td>{$ok}</td></tr>
+  <tr><td>Accepted</td><td>{$accepted}</td></tr>
   <tr><td>Failed</td><td>{$failed}</td></tr>
 </table>
 

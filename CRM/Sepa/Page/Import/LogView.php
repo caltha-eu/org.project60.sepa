@@ -13,6 +13,7 @@ class CRM_Sepa_Page_Import_LogView extends CRM_Core_Page {
     $errors = CRM_Sepa_Logic_Import_Log::getFailedByHash($import_hash);
     $this->assign('import_hash', $import_hash);
     $this->assign('ok', (int)@$stats[CRM_Sepa_Logic_Import_Log::STATUS_OK]['n']);
+    $this->assign('accepted', (int)@$stats[CRM_Sepa_Logic_Import_Log::STATUS_ACCEPTED]['n']);
     $this->assign('failed', (int)@$stats[CRM_Sepa_Logic_Import_Log::STATUS_FAILED]['n']);
     $this->assign('errors', $errors);
     return parent::run();

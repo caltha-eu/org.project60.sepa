@@ -112,7 +112,7 @@
                 </td>
             </tr>{/if}{/if}{/if}
 
-          {if $sepa.bank_status eq '3' or $sepa.bank_status eq '5'}
+          {if $sepa.bank_status eq '3' or $sepa.bank_status eq '5' or $sepa.bank_status eq '8'}
           <tr>
             <td class="label" style="vertical-align: middle;">
               <a class="button" onclick="mandate_action_suspend();">{ts domain="org.project60.sepa"}Suspend{/ts}</a>

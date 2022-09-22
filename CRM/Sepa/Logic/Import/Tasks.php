@@ -67,11 +67,11 @@ class CRM_Sepa_Logic_Import_Tasks {
         $result = self::createMandate($row, $params, $contactId);
 
         CRM_Sepamandatebatch_Logic_Bankstatus::createActivity($result['id']);
-        CRM_Sepamandatebatch_Logic_BankStatusAutoAccepted::verify($result);
+        $accepted = CRM_Sepamandatebatch_Logic_BankStatusAutoAccepted::verify($result);
 
         $log = array(
           'import_hash' => $import_hash,
-          'status' => CRM_Sepa_Logic_Import_Log::STATUS_OK,
+          'status' => $accepted ? CRM_Sepa_Logic_Import_Log::STATUS_ACCEPTED : CRM_Sepa_Logic_Import_Log::STATUS_OK,
           'reference' => $row[CRM_Sepa_Logic_Import::$column['reference']],
           'mandate_id' => $result['id'],
           'filename' => '',
