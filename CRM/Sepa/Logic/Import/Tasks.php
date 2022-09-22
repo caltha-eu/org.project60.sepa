@@ -66,8 +66,7 @@ class CRM_Sepa_Logic_Import_Tasks {
         $contactId = self::createContact($row, $params);
         $result = self::createMandate($row, $params, $contactId);
 
-        CRM_Sepamandatebatch_Logic_Bankstatus::createActivity($result['id']);
-        $accepted = CRM_Sepamandatebatch_Logic_BankStatusAutoAccepted::verify($result);
+        $accepted = CRM_Sepamandatebatch_Logic_BankStatusAutoAccepted::verify($result['values'][0]['iban']);
 
         $log = array(
           'import_hash' => $import_hash,
