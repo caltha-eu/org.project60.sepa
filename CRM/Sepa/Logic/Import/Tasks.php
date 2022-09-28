@@ -239,6 +239,7 @@ class CRM_Sepa_Logic_Import_Tasks {
       'bic' => $bic,
       'source' => $row[CRM_Sepa_Logic_Import::$column['source']],
       'financial_type_id' => $params['financial_type_id'],
+      "type" => "RCUR",
       'frequency_interval' => $params['import_interval'],
       'amount' => $amount,
       'start_date' => $params['start_date'],
