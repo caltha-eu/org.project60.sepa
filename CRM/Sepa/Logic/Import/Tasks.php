@@ -29,7 +29,7 @@ class CRM_Sepa_Logic_Import_Tasks {
 
   /**
    * Task just for starting
-   * 
+   *
    * @param \CRM_Queue_TaskContext $ctx
    *
    * @return bool
@@ -66,11 +66,14 @@ class CRM_Sepa_Logic_Import_Tasks {
         $contactId = self::createContact($row, $params);
         $result = self::createMandate($row, $params, $contactId);
 
-        $accepted = CRM_Sepamandatebatch_Logic_BankStatusAutoAccepted::verify($result['values'][0]['iban']);
-
+        $status = CRM_Sepa_Logic_Import_Log::STATUS_OK;
+        if (CRM_Sepamandatebatch_Settings::supportAutoAccept()) {
+          $accepted = CRM_Sepamandatebatch_Logic_BankStatusAutoAccepted::payerBankSupportAutoAccept($result['values'][0]['iban']);
+          $status = $accepted ? CRM_Sepa_Logic_Import_Log::STATUS_ACCEPTED : CRM_Sepa_Logic_Import_Log::STATUS_OK;
+        }
         $log = array(
           'import_hash' => $import_hash,
-          'status' => $accepted ? CRM_Sepa_Logic_Import_Log::STATUS_ACCEPTED : CRM_Sepa_Logic_Import_Log::STATUS_OK,
+          'status' => $status,
           'reference' => $row[CRM_Sepa_Logic_Import::$column['reference']],
           'mandate_id' => $result['id'],
           'filename' => '',
