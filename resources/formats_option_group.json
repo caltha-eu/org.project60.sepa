@@ -118,6 +118,33 @@
       "filter": "0",
       "is_reserved": "1",
       "is_active": "1"
+    },
+    {
+      "_lookup": ["name"],
+      "_translate": ["label"],
+      "label": "SDD - CBIBdySDDReq.00.01.00",
+      "name": "CBIBdySDDReq_00_01_00",
+      "filter": "0",
+      "is_reserved": "1",
+      "is_active": "1"
+    },
+    {
+      "_lookup": ["name"],
+      "_translate": ["label"],
+      "label": "pain.008.001.02 EBICS 3.6",
+      "name": "pain_008_001_02_ebics36",
+      "filter": "0",
+      "is_reserved": "1",
+      "is_active": "1"
+    },
+    {
+      "_lookup": ["name"],
+      "_translate": ["label"],
+      "label": "pain.008.001.02 EBICS 3.6 with address",
+      "name": "pain_008_003_02_ebics36_address",
+      "filter": "0",
+      "is_reserved": "1",
+      "is_active": "1"
     }
   ]
 }

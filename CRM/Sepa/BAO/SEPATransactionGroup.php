@@ -67,13 +67,12 @@ class CRM_Sepa_BAO_SEPATransactionGroup extends CRM_Sepa_DAO_SEPATransactionGrou
 
     $creditor_id = $group["sdd_creditor_id"];
     $creditor    = civicrm_api3('SepaCreditor', 'getsingle', array('id' => $creditor_id));
+    if (!empty($creditor['country_id'])) {
+      $creditor['ctry'] = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_Country', $creditor['country_id'], 'iso_code');
+    }
     $format      = CRM_Sepa_Logic_Format::getFormatForCreditor($creditor_id);
     $template->assign('group',    $group);
     $template->assign('creditor', $creditor);
-
-    // load file format class
-    $fileFormatName = CRM_Core_PseudoConstant::getName('CRM_Sepa_BAO_SEPACreditor', 'sepa_file_format_id', $creditor['sepa_file_format_id']);
-    $fileFormat = CRM_Sepa_Logic_Format::loadFormatClass($fileFormatName);
 
     $queryParams= array (1=>array($this->id, 'Positive'));
     $query="
@@ -110,7 +109,10 @@ class CRM_Sepa_BAO_SEPATransactionGroup extends CRM_Sepa_DAO_SEPATransactionGrou
         AND mandate.is_enabled = true
         " . $fileFormat::$generatexml_sql_where . "
       GROUP BY c.id"; //and not cancelled
+
+    CRM_Core_DAO::disableFullGroupByMode();
     $contrib = CRM_Core_DAO::executeQuery($query, $queryParams);
+    CRM_Core_DAO::reenableFullGroupByMode();
 
     setlocale(LC_CTYPE, 'en_US.utf8');
     //dear dear, it might work, but seems to be highly dependant of the system running it, without any way to know what is available, or if the setting was done properly #phpeature
@@ -126,8 +128,11 @@ class CRM_Sepa_BAO_SEPATransactionGroup extends CRM_Sepa_DAO_SEPATransactionGrou
       }
 
       // make some fields comply with SEPA standards
-      $t["display_name"]   = CRM_Sepa_Logic_Verification::convert2SepaCharacterSet($t["display_name"]);
-
+      if (!empty($t["account_holder"])) {
+        $t["display_name"] = CRM_Sepa_Logic_Verification::convert2SepaCharacterSet($t["account_holder"]);
+      } else {
+        $t["display_name"] = CRM_Sepa_Logic_Verification::convert2SepaCharacterSet($t["display_name"]);
+      }
       /*
        * INFO
        * wyłączenie "oczyszczanie" wyświetlanej nazwy
@@ -137,7 +142,6 @@ class CRM_Sepa_BAO_SEPATransactionGroup extends CRM_Sepa_DAO_SEPATransactionGrou
       if (function_exists("iconv")){
         $t["display_name"] = iconv("UTF-8", "ASCII//TRANSLIT", $t["display_name"]);
       }
-
       $t["street_address"] = CRM_Sepa_Logic_Verification::convert2SepaCharacterSet($t["street_address"]);
       $t["postal_code"]    = CRM_Sepa_Logic_Verification::convert2SepaCharacterSet($t["postal_code"]);
       $t["city"]           = CRM_Sepa_Logic_Verification::convert2SepaCharacterSet($t["city"]);
@@ -168,7 +172,9 @@ class CRM_Sepa_BAO_SEPATransactionGroup extends CRM_Sepa_DAO_SEPATransactionGrou
     $template->assign("nbtransactions", $this->nbtransactions);
     $template->assign("contributions", $r);
 
-
+    // load file format class
+    $fileFormatName = CRM_Core_PseudoConstant::getName('CRM_Sepa_BAO_SEPACreditor', 'sepa_file_format_id', $creditor['sepa_file_format_id']);
+    $fileFormat = CRM_Sepa_Logic_Format::loadFormatClass($fileFormatName);
     $fileFormat->assignExtraVariables($template);
 
     // render file
@@ -197,7 +203,7 @@ class CRM_Sepa_BAO_SEPATransactionGroup extends CRM_Sepa_DAO_SEPATransactionGrou
     $format = CRM_Sepa_Logic_Format::getFormatForCreditor($txgroup['sdd_creditor_id']);
 
     $creditor = civicrm_api ("SepaCreditor", "getsingle", array("sequential"=>1, "version"=>3, "id"=>$txgroup["sdd_creditor_id"]));
-    // TODO: grouping: $fileFormatGrouping = CRM_Core_OptionGroup::getValue('sepa_file_format', $creditor['sepa_file_format_id'], 'value', 'String', 'grouping');
+    // TODO: grouping: $fileFormatGrouping = CRM_Sepa_CustomData::getOptionValue('sepa_file_format', $creditor['sepa_file_format_id'], 'value', 'String', 'grouping');
 
     if ($override || (!isset($txgroup['sdd_file_id']) || !$txgroup['sdd_file_id'])) {
       // find an available txgroup reference

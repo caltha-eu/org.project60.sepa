@@ -41,7 +41,6 @@
           </PrvtId>
         </Id>
       </CdtrSchmeId>
-
 {foreach from=$contributions item="contribution"}
       <DrctDbtTxInf>
         <PmtId>

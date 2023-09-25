@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS `civicrm_sdd_creditor`(
      `pi_ooff`              varchar(64)         COMMENT 'payment instruments, comma separated, to be used for one-off collections',
      `pi_rcur`              varchar(64)         COMMENT 'payment instruments, comma separated, to be used for recurring collections',
      `uses_bic`             tinyint             COMMENT 'If true, BICs are not used for this creditor',
+     `cuc`                  varchar(8)          COMMENT 'CUC-code of the creditor (Codice Univoco CBI)',
     PRIMARY KEY ( `id` ),
     CONSTRAINT FK_civicrm_sdd_creditor_creditor_id FOREIGN KEY (`creditor_id`) REFERENCES `civicrm_contact`(`id`) ON DELETE SET NULL,
     CONSTRAINT FK_civicrm_sdd_creditor_country_id  FOREIGN KEY (`country_id`)  REFERENCES `civicrm_country`(`id`) ON DELETE SET NULL
@@ -45,7 +46,8 @@ CREATE TABLE IF NOT EXISTS `civicrm_sdd_mandate` (
      `date`                  datetime NOT NULL                     COMMENT 'signature date, by default now()',
      `creditor_id`           int unsigned                          COMMENT 'FK to sdd_creditor',
      `contact_id`            int unsigned                          COMMENT 'FK to Contact ID that owns that account',
-     `iban`                  varchar(42) NULL                      COMMENT 'Iban of the debtor',
+     `account_holder`        varchar(255) NULL DEFAULT NULL        COMMENT 'Name of the account holder',
+     `iban`                  varchar(42) NULL                      COMMENT 'IBAN of the debtor',
      `bic`                   varchar(11)                           COMMENT 'BIC of the debtor',
      `type`                  varchar(4) NOT NULL DEFAULT 'RCUR'    COMMENT 'RCUR for recurrent (default), OOFF for one-shot',
      `status`                varchar(8) NOT NULL DEFAULT 'INIT'    COMMENT 'Status of the mandate (INIT, OOFF, FRST, RCUR, SENT, INVALID, COMPLETE, ONHOLD, PARTIAL)',

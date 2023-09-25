@@ -528,6 +528,7 @@ class CRM_Sepa_BAO_SEPAMandate extends CRM_Sepa_DAO_SEPAMandate {
    *  - amount
    *  - campaign_id
    *  - financial type
+   *  - cycle_day
    *
    * Changes will take effect out to all future contributions,
    *  including already created ones in status 'Pending'
@@ -558,6 +559,11 @@ class CRM_Sepa_BAO_SEPAMandate extends CRM_Sepa_DAO_SEPAMandate {
 
     // BANK DETAIL CHANGES (applies to the MANDATE ENTITY)
     $bank_data_changes = array();
+    if (!empty($changes['account_holder']) && $changes['account_holder'] != $mandate['account_holder']) {
+      $bank_data_changes['account_holder'] = $changes['account_holder'];
+      $changes_details[] = ts("Account Holder changed from '%1' to '%2'",
+        array(1 => $mandate['account_holder'], 2 => $changes['account_holder'], 'domain' => 'org.project60.sepa'));
+    }
     if (!empty($changes['iban']) && $changes['iban'] != $mandate['iban']) {
       $bank_data_changes['iban'] = $changes['iban'];
       $changes_details[] = ts("IBAN changed from '%1' to '%2'",
@@ -625,6 +631,16 @@ class CRM_Sepa_BAO_SEPAMandate extends CRM_Sepa_DAO_SEPAMandate {
               'domain' => 'org.project60.sepa'));
     }
 
+    // CYCLE DAY CHANGE
+    if (!empty($changes['cycle_day']) && $changes['cycle_day'] != $contribution_rcur['cycle_day']) {
+      $contribution_changes['cycle_day'] = $changes['cycle_day'];
+      $changes_subjects[] = ts("Cycle day changed", array('domain' => 'org.project60.sepa'));
+      $changes_details[] = ts("Cycle day changed from '%1' to '%2'.",
+        array(1 => $contribution_rcur['cycle_day'],
+          2 => $changes['cycle_day'],
+          'domain' => 'org.project60.sepa'));
+    }
+
     if (!empty($contribution_changes)) try {
       // change the recurring contribution
       $contribution_changes['id'] = $contribution_rcur['id'];
@@ -685,7 +701,7 @@ class CRM_Sepa_BAO_SEPAMandate extends CRM_Sepa_DAO_SEPAMandate {
    */
   public static function generateModificationActivity($mandate, $subject, $detail_lines) {
     // get / create activity type
-    $activity_type_id = CRM_Core_OptionGroup::getValue('activity_type', 'sdd_update', 'name');
+    $activity_type_id = CRM_Sepa_CustomData::getOptionValue('activity_type', 'sdd_update', 'name');
     if (!$activity_type_id) {
       // create activity type
       civicrm_api3('OptionValue', 'create', array(
@@ -693,7 +709,7 @@ class CRM_Sepa_BAO_SEPAMandate extends CRM_Sepa_DAO_SEPAMandate {
         'name'            => 'sdd_update',
         'option_group_id' => 'activity_type',
         ));
-      $activity_type_id = CRM_Core_OptionGroup::getValue('activity_type', 'sdd_update', 'name');
+      $activity_type_id = CRM_Sepa_CustomData::getOptionValue('activity_type', 'sdd_update', 'name');
     }
 
     // compile activity
