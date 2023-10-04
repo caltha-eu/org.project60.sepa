@@ -74,6 +74,10 @@ class CRM_Sepa_BAO_SEPATransactionGroup extends CRM_Sepa_DAO_SEPATransactionGrou
     $template->assign('group',    $group);
     $template->assign('creditor', $creditor);
 
+    // load file format class
+    $fileFormatName = CRM_Core_PseudoConstant::getName('CRM_Sepa_BAO_SEPACreditor', 'sepa_file_format_id', $creditor['sepa_file_format_id']);
+    $fileFormat = CRM_Sepa_Logic_Format::loadFormatClass($fileFormatName);
+
     $queryParams= array (1=>array($this->id, 'Positive'));
     $query="
       SELECT
