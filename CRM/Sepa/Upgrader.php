@@ -497,7 +497,7 @@ class CRM_Sepa_Upgrader extends CRM_Sepa_Upgrader_Base {
   /**
    * Upgrade to CiviSEPA 1.3.1 schema (db table for importing mandates from csv file.)
    */
-  public function upgrade_131() {
+  public function upgrade_1805() {
     $this->ctx->log->info('Applying upgrade to 1.3.1 (db table for importing mandates from csv file.)');
     $this->executeSqlFile('sql/update_1605.sql');
     return TRUE;
