@@ -437,4 +437,18 @@ return array(
     'description' => 'Batch size',
     'help_text' => 'Batch size',
   ),
+  'recipient_tax_number' => array(
+    'group_name' => 'SEPA Direct Debit Preferences',
+    'group' => 'org.project60',
+    'name' => 'recipient_tax_number',
+    'type' => 'Integer',
+    'html_type' => 'Text',
+    'default' => '',
+    'add' => '4.6',
+    'is_domain' => 1,
+    'is_contact' => 0,
+    'title' => 'Recipient TAX Number',
+    'description' => 'Recipient TAX Number',
+    'help_text' => 'Recipient TAX Number',
+  ),
 );

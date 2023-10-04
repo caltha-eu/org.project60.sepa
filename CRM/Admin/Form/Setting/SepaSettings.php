@@ -94,6 +94,11 @@ class CRM_Admin_Form_Setting_SepaSettings extends CRM_Core_Form
           'label' => E::ts("Import batch size"),
           'options' => array(),
         ),
+        'recipient_tax_number' => array(
+          'type' => 'text',
+          'label' => E::ts("Recipient TAX Number"),
+          'options' => array(),
+        ),
       );
     }
 

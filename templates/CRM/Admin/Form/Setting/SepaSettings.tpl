@@ -408,6 +408,16 @@ div.sdd-add-creditor {
           </tr>
        </table>
        <br/>
+       <h2>{ts domain="org.project60.sepa"}Other settings{/ts}</h2>
+        <table class="form-layout">
+          <tr class="crm-other-form-block-recipient-tax-number">
+            <td class="label">{$form.recipient_tax_number.label} <a onclick='CRM.help("{ts domain="org.project60.sepa"}Recipient TAX Number{/ts}", {literal}{"id":"id-recipient-tax-number","file":"CRM\/Admin\/Form\/Setting\/SepaSettings"}{/literal}); return false;' href="#" title="{ts domain="org.project60.sepa"}Help{/ts}" class="helpicon">&nbsp;</a></td>
+            <td>
+              {$form.recipient_tax_number.html}
+            </td>
+          </tr>
+       </table>
+       <br/>
       <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
   </div>
   </fieldset>

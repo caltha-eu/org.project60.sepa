@@ -75,6 +75,7 @@ abstract class CRM_Sepa_Logic_Import {
       'import_decimal_delimiter' => null,
       'import_contact_custom_field' => null,
       'import_batch_size' => 50,
+      'recipient_tax_number' => 50,
     );
     foreach ($keys as $key => $val) {
       $value = CRM_Sepa_Logic_Settings::getSetting($key);
@@ -85,8 +86,8 @@ abstract class CRM_Sepa_Logic_Import {
 
 
   /**
-   * Validate whole content of file. Not valid rows recorded in self::$errors array. 
-   * 
+   * Validate whole content of file. Not valid rows recorded in self::$errors array.
+   *
    * @param array $content
    * @param array $settings
    *
@@ -113,7 +114,7 @@ abstract class CRM_Sepa_Logic_Import {
 
   /**
    * Validate one row of file.
-   * 
+   *
    * @param array $row
    *
    * @return bool
@@ -149,7 +150,7 @@ abstract class CRM_Sepa_Logic_Import {
 
   /**
    * Validate format of amount.
-   * 
+   *
    * @param string $amount
    *
    * @return bool
