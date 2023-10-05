@@ -72,6 +72,16 @@
     {
       "_lookup": ["value"],
       "_translate": ["label"],
+      "label": "Bank PKO SA",
+      "value": "10",
+      "name": "pkosa",
+      "filter": "0",
+      "is_reserved": "1",
+      "is_active": "1"
+    },
+    {
+      "_lookup": ["value"],
+      "_translate": ["label"],
       "label": "pain.008.003.02 (EBICS-3.0 RCUR/CH)",
       "description": "EBIC-3.0 RCUR only, Support for CH",
       "value": "7",

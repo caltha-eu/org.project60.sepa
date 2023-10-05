@@ -502,4 +502,16 @@ class CRM_Sepa_Upgrader extends CRM_Sepa_Upgrader_Base {
     $this->executeSqlFile('sql/update_1605.sql');
     return TRUE;
   }
+
+  /**
+   *
+   * @return TRUE on success
+   * @throws Exception
+   */
+  public function upgrade_1806() {
+    $this->ctx->log->info('Adding new file formats');
+    $customData = new CRM_Sepa_CustomData('org.project60.sepa');
+    $customData->syncOptionGroup(E::path('resources/formats_option_group.json'));
+    return TRUE;
+  }
 }
