@@ -75,7 +75,9 @@ abstract class CRM_Sepa_Logic_Import {
       'import_decimal_delimiter' => null,
       'import_contact_custom_field' => null,
       'import_batch_size' => 50,
-      'recipient_tax_number' => 50,
+      'recipient_tax_number' => null,
+      'recipient_iban_number' => null,
+      'recipient_info' => null,
     );
     foreach ($keys as $key => $val) {
       $value = CRM_Sepa_Logic_Settings::getSetting($key);

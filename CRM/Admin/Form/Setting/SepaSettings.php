@@ -99,6 +99,16 @@ class CRM_Admin_Form_Setting_SepaSettings extends CRM_Core_Form
           'label' => E::ts("Recipient TAX Number"),
           'options' => array(),
         ),
+        'recipient_iban_number' => array(
+          'type' => 'text',
+          'label' => E::ts("Recipient IBAN Number"),
+          'options' => array(),
+        ),
+        'recipient_info' => array(
+          'type' => 'text',
+          'label' => E::ts("Recipient Name"),
+          'options' => array(),
+        ),
       );
     }
 

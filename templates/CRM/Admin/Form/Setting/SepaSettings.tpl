@@ -416,6 +416,18 @@ div.sdd-add-creditor {
               {$form.recipient_tax_number.html}
             </td>
           </tr>
+          <tr class="crm-other-form-block-recipient-iban-number">
+            <td class="label">{$form.recipient_iban_number.label} <a onclick='CRM.help("{ts domain="org.project60.sepa"}Recipient IBAN Number{/ts}", {literal}{"id":"id-recipient-iban-number","file":"CRM\/Admin\/Form\/Setting\/SepaSettings"}{/literal}); return false;' href="#" title="{ts domain="org.project60.sepa"}Help{/ts}" class="helpicon">&nbsp;</a></td>
+            <td>
+              {$form.recipient_iban_number.html}
+            </td>
+          </tr>
+          <tr class="crm-other-form-block-recipient-info">
+            <td class="label">{$form.recipient_info.label} <a onclick='CRM.help("{ts domain="org.project60.sepa"}Recipient Name{/ts}", {literal}{"id":"id-recipient-info","file":"CRM\/Admin\/Form\/Setting\/SepaSettings"}{/literal}); return false;' href="#" title="{ts domain="org.project60.sepa"}Help{/ts}" class="helpicon">&nbsp;</a></td>
+            <td>
+              {$form.recipient_info.html}
+            </td>
+          </tr>
        </table>
        <br/>
       <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
