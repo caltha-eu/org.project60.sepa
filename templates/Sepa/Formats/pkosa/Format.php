@@ -29,6 +29,10 @@ class CRM_Sepa_Logic_Format_pkosa extends CRM_Sepa_Logic_Format {
     ));
   }
 
+  public function improveContent($content) {
+    return preg_replace('~(*BSR_ANYCRLF)\R~', "\r\n", $content);
+  }
+
   public function getDDFilePrefix() {
     return 'PKOSA-';
   }
