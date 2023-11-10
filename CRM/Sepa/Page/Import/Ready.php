@@ -80,6 +80,7 @@ class CRM_Sepa_Page_Import_Ready extends CRM_Core_Page {
     foreach ($data as $row) {
       $country[$row[CRM_Sepa_Logic_Import::$column['country_id']]] = $row[CRM_Sepa_Logic_Import::$column['country_id']];
     }
+
     $result = civicrm_api3('Country', 'get', array(
       'sequential' => 1,
       'return' => "id,iso_code",
