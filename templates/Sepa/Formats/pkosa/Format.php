@@ -15,8 +15,8 @@
 
 class CRM_Sepa_Logic_Format_pkosa extends CRM_Sepa_Logic_Format {
 
-  /** @var string Only accepted (3), active (5) mandates should be processed */
-  public static $generatexml_sql_where = ' AND mandate.bank_status IN (3, 5)';
+  /** @var string Only accepted (3), active (5) or auto_accepted (8) mandates should be processed */
+  public static $generatexml_sql_where = ' AND mandate.bank_status IN (3, 5, 8)';
 
   /**
    * gives the option of setting extra variables to the template
