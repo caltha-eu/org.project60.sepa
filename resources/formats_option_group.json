@@ -72,7 +72,7 @@
     {
       "_lookup": ["value"],
       "_translate": ["label"],
-      "label": "Bank PKO SA",
+      "label": "Pekao SA",
       "value": "10",
       "name": "pkosa",
       "filter": "0",
