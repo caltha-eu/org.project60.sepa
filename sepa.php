@@ -362,13 +362,13 @@ function sepa_civicrm_navigationMenu(&$menu) {
   _sepa_civix_insert_navigation_menu($menu,'Contributions',array(
     'label' => ts('CiviSEPA Mandates', array('domain' => 'org.project60.sepa')),
     'name' => 'Dashboard',
-    'url' => 'civicrm/sepa/lmandate',
+    'url' => 'civicrm/sepa/mandate',
     'permission' => 'view sepa groups',
     'operator' => NULL,
     'separator' => 0,
     'active' => 1
   ));
-  
+
   _sepa_civix_insert_navigation_menu($menu,'Contributions',array(
     'label' => E::ts('CiviSEPA Import', array('domain' => 'org.project60.sepa')),
     'name' => 'Import',
