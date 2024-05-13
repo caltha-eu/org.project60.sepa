@@ -130,25 +130,24 @@ class CRM_Sepa_BAO_SEPATransactionGroup extends CRM_Sepa_DAO_SEPATransactionGrou
         $t["iban"] = str_replace(array(' ','-'), '', $t["iban"]);
         $t['ctry'] = substr($t["iban"], 0, 2);
       }
-
-      // make some fields comply with SEPA standards
-      if (!empty($t["account_holder"])) {
-        $t["display_name"] = CRM_Sepa_Logic_Verification::convert2SepaCharacterSet($t["account_holder"]);
-      } else {
-        $t["display_name"] = CRM_Sepa_Logic_Verification::convert2SepaCharacterSet($t["display_name"]);
-      }
       /*
        * INFO
-       * wyłączenie "oczyszczanie" wyświetlanej nazwy
-       * wynika z https://app.asana.com/0/913756170743071/1201571843139341
+       * wyłączenie "oczyszczanie" danych z transakcji
+       * https://app.asana.com/0/0/1207291772385619/f
        */
+      // make some fields comply with SEPA standards
+      if (!empty($t["account_holder"])) {
+        //$t["display_name"] = CRM_Sepa_Logic_Verification::convert2SepaCharacterSet($t["account_holder"]);
+      } else {
+        //$t["display_name"] = CRM_Sepa_Logic_Verification::convert2SepaCharacterSet($t["display_name"]);
+      }
       // try to convert the name into transliterated ASCII
       if (function_exists("iconv")){
-        $t["display_name"] = iconv("UTF-8", "ASCII//TRANSLIT", $t["display_name"]);
+        //$t["display_name"] = iconv("UTF-8", "ASCII//TRANSLIT", $t["display_name"]);
       }
-      $t["street_address"] = CRM_Sepa_Logic_Verification::convert2SepaCharacterSet($t["street_address"]);
-      $t["postal_code"]    = CRM_Sepa_Logic_Verification::convert2SepaCharacterSet($t["postal_code"]);
-      $t["city"]           = CRM_Sepa_Logic_Verification::convert2SepaCharacterSet($t["city"]);
+      //$t["street_address"] = CRM_Sepa_Logic_Verification::convert2SepaCharacterSet($t["street_address"]);
+      //$t["postal_code"]    = CRM_Sepa_Logic_Verification::convert2SepaCharacterSet($t["postal_code"]);
+      //$t["city"]           = CRM_Sepa_Logic_Verification::convert2SepaCharacterSet($t["city"]);
 
       // create an individual transaction message
       $t["message"] = CRM_Sepa_Logic_Settings::getTransactionMessage($t, $creditor, $this->id);
