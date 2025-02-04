@@ -154,7 +154,7 @@ function sepa_civicrm_install() {
  */
 function sepa_civicrm_uninstall() {
   //should we delete the tables?
-  return _sepa_civix_civicrm_uninstall();
+  return;
 }
 
 /**
@@ -168,7 +168,7 @@ function sepa_civicrm_enable() {
  * Implementation of hook_civicrm_disable
  */
 function sepa_civicrm_disable() {
-  return _sepa_civix_civicrm_disable();
+  return;
 }
 
 /**
@@ -181,7 +181,7 @@ function sepa_civicrm_disable() {
  *                for 'enqueue', returns void
  */
 function sepa_civicrm_upgrade($op, CRM_Queue_Queue $queue = NULL) {
-  return _sepa_civix_civicrm_upgrade($op, $queue);
+  return;
 }
 
 function sepa_civicrm_summaryActions( &$actions, $contactID ) {
@@ -600,7 +600,6 @@ function sepa_civicrm_tabset($tabsetName, &$tabs, $context) {
  * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_postInstall
  */
 function sepa_civicrm_postInstall() {
-  _sepa_civix_civicrm_postInstall();
 }
 
 // /**
