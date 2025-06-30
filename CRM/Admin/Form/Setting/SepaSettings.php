@@ -23,6 +23,7 @@ class CRM_Admin_Form_Setting_SepaSettings extends CRM_Core_Form
 {
     private $config_fields;
     private $custom_fields;
+    private $import_fields;
 
     function __construct() {
        parent::__construct();
@@ -47,6 +48,68 @@ class CRM_Admin_Form_Setting_SepaSettings extends CRM_Core_Form
                          array('custom_RCUR_notice',     ts('Recurring&nbsp;notice&nbsp;days (follow-up)', array('domain' => 'org.project60.sepa')), array('size' => 2)),
                          array('custom_FRST_notice',     ts('Recurring&nbsp;notice&nbsp;days (initial)', array('domain' => 'org.project60.sepa')), array('size' => 2)),
                          array('custom_update_lock_timeout', ts('Update lock timeout', array('domain' => 'org.project60.sepa')), array('size' => 2)));
+      $this->import_fields = array(
+        'import_financial_type_id' => array(
+          'type' => 'text',
+          'label' => E::ts("Financial type id"),
+          'options' => array(),
+        ),
+        'import_campaign_id' => array(
+          'type' => 'text',
+          'label' => E::ts("Campaign id"),
+          'options' => array(),
+        ),
+        'import_collection_day' => array(
+          'type' => 'text',
+          'label' => E::ts("Collection day"),
+          'options' => array(),
+        ),
+        'import_interval' => array(
+          'type' => 'text',
+          'label' => E::ts("Interval"),
+          'options' => array(),
+        ),
+        'import_date_format' => array(
+          'type' => 'text',
+          'label' => E::ts("Date format"),
+          'options' => array(),
+        ),
+        'import_thousands_delimiter' => array(
+          'type' => 'text',
+          'label' => E::ts("Thousands delimiter"),
+          'options' => array(),
+        ),
+        'import_decimal_delimiter' => array(
+          'type' => 'text',
+          'label' => E::ts("Decimal delimiter"),
+          'options' => array(),
+        ),
+        'import_contact_custom_field' => array(
+          'type' => 'text',
+          'label' => E::ts("Contact custom field"),
+          'options' => array(),
+        ),
+        'import_batch_size' => array(
+          'type' => 'text',
+          'label' => E::ts("Import batch size"),
+          'options' => array(),
+        ),
+        'recipient_tax_number' => array(
+          'type' => 'text',
+          'label' => E::ts("Recipient TAX Number"),
+          'options' => array(),
+        ),
+        'recipient_iban_number' => array(
+          'type' => 'text',
+          'label' => E::ts("Recipient IBAN Number"),
+          'options' => array(),
+        ),
+        'recipient_info' => array(
+          'type' => 'text',
+          'label' => E::ts("Recipient Name"),
+          'options' => array(),
+        ),
+      );
     }
 
     function domainToString($raw) {
@@ -219,6 +282,12 @@ class CRM_Admin_Form_Setting_SepaSettings extends CRM_Core_Form
         CRM_Core_Resources::singleton()->addScriptFile('org.project60.sepa', 'js/SepaSettings.js');
         CRM_Core_Resources::singleton()->addVars('p60sdd', CRM_Sepa_Logic_PaymentInstruments::getDefaultSEPAPaymentInstruments());
 
+        // import settings
+        foreach ($this->import_fields as $key => $field) {
+          $value = CRM_Sepa_Logic_Settings::getSetting($key);
+          $this->addElement($field['type'], $key, $field['label'], $field['options'])->setValue($value);
+        }
+
       $this->addButtons([
         [
           'type' => 'next',
@@ -258,6 +327,11 @@ class CRM_Admin_Form_Setting_SepaSettings extends CRM_Core_Form
         CRM_Sepa_Logic_Settings::setSetting((isset($values['sdd_skip_closed'])      ? "1" : "0"), 'sdd_skip_closed');
         CRM_Sepa_Logic_Settings::setSetting((isset($values['sdd_no_draft_xml'])     ? "1" : "0"), 'sdd_no_draft_xml');
         CRM_Sepa_Logic_Settings::setSetting((isset($values['pp_buffer_days'])       ? (int) $values['pp_buffer_days'] : "0"), 'pp_buffer_days');
+
+        // save import settings
+        foreach ($this->import_fields as $key => $field) {
+          CRM_Sepa_Logic_Settings::setSetting($values[$key], $key);
+        }
 
         $session = CRM_Core_Session::singleton();
         $session->setStatus(E::ts("Settings successfully updated."), E::ts("Saved"), 'info');

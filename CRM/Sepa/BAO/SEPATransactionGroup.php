@@ -74,6 +74,10 @@ class CRM_Sepa_BAO_SEPATransactionGroup extends CRM_Sepa_DAO_SEPATransactionGrou
     $template->assign('group',    $group);
     $template->assign('creditor', $creditor);
 
+    // load file format class
+    $fileFormatName = CRM_Core_PseudoConstant::getName('CRM_Sepa_BAO_SEPACreditor', 'sepa_file_format_id', $creditor['sepa_file_format_id']);
+    $fileFormat = CRM_Sepa_Logic_Format::loadFormatClass($fileFormatName);
+
     $queryParams= array (1=>array($this->id, 'Positive'));
     $query="
       SELECT
@@ -107,6 +111,7 @@ class CRM_Sepa_BAO_SEPATransactionGroup extends CRM_Sepa_DAO_SEPATransactionGrou
       WHERE g.txgroup_id = %1
         AND c.contribution_status_id != 3
         AND mandate.is_enabled = true
+        " . $fileFormat::$generatexml_sql_where . "
       GROUP BY c.id"; //and not cancelled
 
     CRM_Core_DAO::disableFullGroupByMode();
@@ -125,16 +130,24 @@ class CRM_Sepa_BAO_SEPATransactionGroup extends CRM_Sepa_DAO_SEPATransactionGrou
         $t["iban"] = str_replace(array(' ','-'), '', $t["iban"]);
         $t['ctry'] = substr($t["iban"], 0, 2);
       }
-
+      /*
+       * INFO
+       * wyłączenie "oczyszczanie" danych z transakcji
+       * https://app.asana.com/0/0/1207291772385619/f
+       */
       // make some fields comply with SEPA standards
       if (!empty($t["account_holder"])) {
-        $t["display_name"] = CRM_Sepa_Logic_Verification::convert2SepaCharacterSet($t["account_holder"]);
+        //$t["display_name"] = CRM_Sepa_Logic_Verification::convert2SepaCharacterSet($t["account_holder"]);
       } else {
-        $t["display_name"] = CRM_Sepa_Logic_Verification::convert2SepaCharacterSet($t["display_name"]);
+        //$t["display_name"] = CRM_Sepa_Logic_Verification::convert2SepaCharacterSet($t["display_name"]);
       }
-      $t["street_address"] = CRM_Sepa_Logic_Verification::convert2SepaCharacterSet($t["street_address"]);
-      $t["postal_code"]    = CRM_Sepa_Logic_Verification::convert2SepaCharacterSet($t["postal_code"]);
-      $t["city"]           = CRM_Sepa_Logic_Verification::convert2SepaCharacterSet($t["city"]);
+      // try to convert the name into transliterated ASCII
+      if (function_exists("iconv")){
+        //$t["display_name"] = iconv("UTF-8", "ASCII//TRANSLIT", $t["display_name"]);
+      }
+      //$t["street_address"] = CRM_Sepa_Logic_Verification::convert2SepaCharacterSet($t["street_address"]);
+      //$t["postal_code"]    = CRM_Sepa_Logic_Verification::convert2SepaCharacterSet($t["postal_code"]);
+      //$t["city"]           = CRM_Sepa_Logic_Verification::convert2SepaCharacterSet($t["city"]);
 
       // create an individual transaction message
       $t["message"] = CRM_Sepa_Logic_Settings::getTransactionMessage($t, $creditor, $this->id);

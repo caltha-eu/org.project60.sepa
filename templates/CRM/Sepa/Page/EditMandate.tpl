@@ -49,9 +49,7 @@
 	            <tr><td class="label">{ts domain="org.project60.sepa"}Create Date{/ts}</td><td>{$contribution.create_date}</td></tr>
 	            <tr><td class="label">{ts domain="org.project60.sepa"}Last Modified{/ts}</td><td>{$contribution.modified_date}</td></tr>
 	            <tr><td class="label">{ts domain="org.project60.sepa"}Frequency{/ts}</td><td>{$contribution.cycle}</td></tr>
-	            <tr><td class="label">{ts domain="org.project60.sepa"}Collection Day{/ts}</td><td>{$contribution.cycle_day}
-
-              </td></tr>
+	            <tr><td class="label">{ts domain="org.project60.sepa"}Collection Day{/ts}</td><td>{$contribution.cycle_day}</td></tr>
                 <tr><td class="label">{ts domain="org.project60.sepa"}Start Date{/ts}</td><td>{$contribution.start_date}</td></tr>
                 <tr><td class="label">{ts domain="org.project60.sepa"}End Date{/ts}</td><td>{$contribution.end_date}</td></tr>
                 <tr><td class="label">{ts domain="org.project60.sepa"}Next Collection{/ts}</td><td>{$contribution.next_sched_contribution_date}</td></tr>
@@ -127,6 +125,32 @@
                 </td>
             </tr>{/if}{/if}{/if}
 
+          {if $sepa.bank_status eq '3' or $sepa.bank_status eq '5' or $sepa.bank_status eq '8'}
+          <tr>
+            <td class="label" style="vertical-align: middle;">
+              <a class="button" onclick="mandate_action_suspend();">{ts domain="org.project60.sepa"}Suspend{/ts}</a>
+            </td>
+            <td>
+              <label for="restore_date">{ts domain="org.project60.sepa"}Suspend to:{/ts}</label>
+              <input type="text" name="restore_date" id="restore_date" size="12" value="" />
+              <br/>
+              <label for="suspend_noe">{ts domain="org.project60.sepa"}Note:{/ts}</label>
+              <input type="text" id="suspend_noe" name="suspend_note" size="32" />
+            </td>
+          </tr>
+          {/if}
+
+          {if $sepa.bank_status eq '7'}
+          <tr>
+            <td class="label" style="vertical-align: middle;">
+              <a class="button" onclick="mandate_action_restore();">{ts domain="org.project60.sepa"}Restore{/ts}</a>
+            </td>
+            <td>
+              Restore mandate to previous bank status.
+            </td>
+          </tr>
+          {/if}
+
             <tr>
             	<td class="label" style="vertical-align: middle;"><a href="{crmURL p="civicrm/sepa/createmandate" q="reset=1&clone=$mandate_id"}" class="button">{ts domain="org.project60.sepa"}Clone{/ts}</td>
             	<td>{ts domain="org.project60.sepa"}Create a new mandate similar to this.{/ts}</td>
@@ -185,6 +209,16 @@ function mandate_action_change_cycle_day() {
   cj("#sepa_action_form").submit();
 }
 
+function mandate_action_suspend() {
+  cj("#mandate_action_value").val('suspend');
+  cj("#sepa_action_form").submit();
+}
+
+function mandate_action_restore() {
+  cj("#mandate_action_value").val('restore');
+  cj("#sepa_action_form").submit();
+}
+
 function mandate_action_cancel() {
 	cj("#mandate_action_value").val('cancel');
 	if (cj("[name='cancel_reason']").val()) {
@@ -235,6 +269,8 @@ cj('#replace_date').addClass('dateplugin');
 cj('#replace_date').datepicker(dateOptions);
 cj('#end_date').addClass('dateplugin');
 cj('#end_date').datepicker(dateOptions);
+cj('#restore_date').addClass('dateplugin');
+cj('#restore_date').datepicker(dateOptions);
 </script>
 {/literal}
 

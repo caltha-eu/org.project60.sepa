@@ -91,8 +91,6 @@ function _sepa_civix_civicrm_config($config = NULL) {
   }
   $configured = TRUE;
 
-  $template = CRM_Core_Smarty::singleton();
-
   $extRoot = __DIR__ . DIRECTORY_SEPARATOR;
   $extDir = $extRoot . 'templates';
   $template->addTemplateDir($extDir);

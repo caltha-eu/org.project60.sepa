@@ -346,6 +346,96 @@ div.sdd-add-creditor {
             </tr>
        </table>
        <br/>
+       <h2>{ts domain="org.project60.sepa"}Payment Processor Settings{/ts}</h2>
+        <table class="form-layout">
+          <tr class="crm-pp-form-block-buffer-days">
+            <td class="label">{$form.pp_buffer_days.label} <a onclick='CRM.help("{ts domain="org.project60.sepa"}Recurring Buffer Days{/ts}", {literal}{"id":"id-buffer-days","file":"CRM\/Admin\/Form\/Setting\/SepaSettings"}{/literal}); return false;' href="#" title="{ts domain="org.project60.sepa"}Help{/ts}" class="helpicon">&nbsp;</a></td>
+            <td>
+              {$form.pp_buffer_days.html}
+            </td>
+          </tr>
+       </table>
+       <br/>
+       <h2>{ts domain="org.project60.sepa"}Import Settings{/ts}</h2>
+        <table class="form-layout">
+          <tr class="crm-import-form-block-financial-type-id">
+            <td class="label">{$form.import_financial_type_id.label} <a onclick='CRM.help("{ts domain="org.project60.sepa"}Financial type id{/ts}", {literal}{"id":"id-financial-type-id","file":"CRM\/Admin\/Form\/Setting\/SepaSettings"}{/literal}); return false;' href="#" title="{ts domain="org.project60.sepa"}Help{/ts}" class="helpicon">&nbsp;</a></td>
+            <td>
+              {$form.import_financial_type_id.html}
+            </td>
+          </tr>
+          <tr class="crm-import-form-block-campaign-id">
+            <td class="label">{$form.import_campaign_id.label} <a onclick='CRM.help("{ts domain="org.project60.sepa"}Campaign id{/ts}", {literal}{"id":"id-campaign-id","file":"CRM\/Admin\/Form\/Setting\/SepaSettings"}{/literal}); return false;' href="#" title="{ts domain="org.project60.sepa"}Help{/ts}" class="helpicon">&nbsp;</a></td>
+            <td>
+              {$form.import_campaign_id.html}
+            </td>
+          </tr>
+          <tr class="crm-import-form-block-collection-day">
+            <td class="label">{$form.import_collection_day.label} <a onclick='CRM.help("{ts domain="org.project60.sepa"}Collection day{/ts}", {literal}{"id":"id-collection-day","file":"CRM\/Admin\/Form\/Setting\/SepaSettings"}{/literal}); return false;' href="#" title="{ts domain="org.project60.sepa"}Help{/ts}" class="helpicon">&nbsp;</a></td>
+            <td>
+              {$form.import_collection_day.html}
+            </td>
+          </tr>
+          <tr class="crm-import-form-block-interval">
+            <td class="label">{$form.import_interval.label} <a onclick='CRM.help("{ts domain="org.project60.sepa"}Interval{/ts}", {literal}{"id":"id-interval","file":"CRM\/Admin\/Form\/Setting\/SepaSettings"}{/literal}); return false;' href="#" title="{ts domain="org.project60.sepa"}Help{/ts}" class="helpicon">&nbsp;</a></td>
+            <td>
+              {$form.import_interval.html}
+            </td>
+          </tr>
+          <tr class="crm-import-form-block-date-format">
+            <td class="label">{$form.import_date_format.label} <a onclick='CRM.help("{ts domain="org.project60.sepa"}Date format{/ts}", {literal}{"id":"id-date-format","file":"CRM\/Admin\/Form\/Setting\/SepaSettings"}{/literal}); return false;' href="#" title="{ts domain="org.project60.sepa"}Help{/ts}" class="helpicon">&nbsp;</a></td>
+            <td>
+              {$form.import_date_format.html}
+            </td>
+          </tr>
+          <tr class="crm-import-form-block-thousands-delimiter">
+            <td class="label">{$form.import_thousands_delimiter.label} <a onclick='CRM.help("{ts domain="org.project60.sepa"}Thousands delimiter{/ts}", {literal}{"id":"id-thousands-delimiter","file":"CRM\/Admin\/Form\/Setting\/SepaSettings"}{/literal}); return false;' href="#" title="{ts domain="org.project60.sepa"}Help{/ts}" class="helpicon">&nbsp;</a></td>
+            <td>
+              {$form.import_thousands_delimiter.html}
+            </td>
+          </tr>
+          <tr class="crm-import-form-block-decimal-delimiter">
+            <td class="label">{$form.import_decimal_delimiter.label} <a onclick='CRM.help("{ts domain="org.project60.sepa"}Decimal delimiter{/ts}", {literal}{"id":"id-decimal-delimiter","file":"CRM\/Admin\/Form\/Setting\/SepaSettings"}{/literal}); return false;' href="#" title="{ts domain="org.project60.sepa"}Help{/ts}" class="helpicon">&nbsp;</a></td>
+            <td>
+              {$form.import_decimal_delimiter.html}
+            </td>
+          </tr>
+          <tr class="crm-import-form-block-contact-custom-field">
+            <td class="label">{$form.import_contact_custom_field.label} <a onclick='CRM.help("{ts domain="org.project60.sepa"}Contact custom field{/ts}", {literal}{"id":"id-contact-custom-field","file":"CRM\/Admin\/Form\/Setting\/SepaSettings"}{/literal}); return false;' href="#" title="{ts domain="org.project60.sepa"}Help{/ts}" class="helpicon">&nbsp;</a></td>
+            <td>
+              {$form.import_contact_custom_field.html}
+            </td>
+          </tr>
+          <tr class="crm-import-form-block-campaign-id">
+              <td class="label">{$form.import_batch_size.label} <a onclick='CRM.help("{ts domain="org.project60.sepa"}Batch size{/ts}", {literal}{"id":"id-batch-size","file":"CRM\/Admin\/Form\/Setting\/SepaSettings"}{/literal}); return false;' href="#" title="{ts domain="org.project60.sepa"}Help{/ts}" class="helpicon">&nbsp;</a></td>
+              <td>
+                  {$form.import_batch_size.html}
+              </td>
+          </tr>
+       </table>
+       <br/>
+       <h2>{ts domain="org.project60.sepa"}Other settings{/ts}</h2>
+        <table class="form-layout">
+          <tr class="crm-other-form-block-recipient-tax-number">
+            <td class="label">{$form.recipient_tax_number.label} <a onclick='CRM.help("{ts domain="org.project60.sepa"}Recipient TAX Number{/ts}", {literal}{"id":"id-recipient-tax-number","file":"CRM\/Admin\/Form\/Setting\/SepaSettings"}{/literal}); return false;' href="#" title="{ts domain="org.project60.sepa"}Help{/ts}" class="helpicon">&nbsp;</a></td>
+            <td>
+              {$form.recipient_tax_number.html}
+            </td>
+          </tr>
+          <tr class="crm-other-form-block-recipient-iban-number">
+            <td class="label">{$form.recipient_iban_number.label} <a onclick='CRM.help("{ts domain="org.project60.sepa"}Recipient IBAN Number{/ts}", {literal}{"id":"id-recipient-iban-number","file":"CRM\/Admin\/Form\/Setting\/SepaSettings"}{/literal}); return false;' href="#" title="{ts domain="org.project60.sepa"}Help{/ts}" class="helpicon">&nbsp;</a></td>
+            <td>
+              {$form.recipient_iban_number.html}
+            </td>
+          </tr>
+          <tr class="crm-other-form-block-recipient-info">
+            <td class="label">{$form.recipient_info.label} <a onclick='CRM.help("{ts domain="org.project60.sepa"}Recipient Name{/ts}", {literal}{"id":"id-recipient-info","file":"CRM\/Admin\/Form\/Setting\/SepaSettings"}{/literal}); return false;' href="#" title="{ts domain="org.project60.sepa"}Help{/ts}" class="helpicon">&nbsp;</a></td>
+            <td>
+              {$form.recipient_info.html}
+            </td>
+          </tr>
+       </table>
+       <br/>
       <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
   </div>
   </fieldset>

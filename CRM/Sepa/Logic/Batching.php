@@ -107,11 +107,29 @@ class CRM_Sepa_Logic_Batching {
       )
       ->addWhere('type', '=', 'RCUR')
       ->addWhere('status', '=', $mode)
-      ->addWhere('creditor_id', '=', $creditor_id)
-      ->setLimit($limit)
+      ->addWhere('creditor_id', '=', $creditor_id);
+      
+    $creditor = civicrm_api3("SepaCreditor", "getsingle", [
+      "sequential" => 1,
+      "id" => $creditor_id
+    ]);
+    $fileFormatName = CRM_Core_PseudoConstant::getName('CRM_Sepa_BAO_SEPACreditor', 'sepa_file_format_id', $creditor['sepa_file_format_id']);
+    $fileFormat = CRM_Sepa_Logic_Format::loadFormatClass($fileFormatName);
+
+    /*
+    * Only accepted (3), active (5) or auto_accepted (8) mandates should be processed
+    */
+    if(!empty($fileFormat::$generatexml_sql_where)) {
+        $relevant_mandates = $relevant_mandates->addWhere('bank_status', 'IN', [3, 5, 8]);
+    }
+
+    $relevant_mandates = $relevant_mandates->setLimit($limit)
       ->setOffset($offset)
       ->execute()
       ->getArrayCopy();
+      
+   
+
 
     $mandates_by_nextdate = [];
     foreach ($relevant_mandates as $mandate) {

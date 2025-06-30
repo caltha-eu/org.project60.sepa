@@ -351,7 +351,26 @@ function sepa_civicrm_navigationMenu(&$menu) {
     'separator' => 2,
     'active' => 1
   ]);
-
+  
+  _sepa_civix_insert_navigation_menu($menu,'Contributions', [
+    'label' => ts('CiviSEPA Mandates', ['domain' => 'org.project60.sepa']),
+    'name' => 'Dashboard',
+    'url' => 'civicrm/sepa/mandate',
+    'permission' => 'view sepa groups',
+    'operator' => NULL,
+    'separator' => 0,
+    'active' => 1
+  ]);
+  
+  _sepa_civix_insert_navigation_menu($menu,'Contributions', [
+    'label' => E::ts('CiviSEPA Import', ['domain' => 'org.project60.sepa']),
+    'name' => 'Import',
+    'url' => 'civicrm/sepa/import',
+    'permission' => 'administer CiviCRM',
+    'operator' => NULL,
+    'separator' => 0,
+    'active' => 1
+  ]);
   //add menu entry for SEPA settings to Administer>CiviContribute menu
   $sepa_settings_url = 'civicrm/admin/setting/sepa';
 
@@ -535,11 +554,14 @@ function sepa_civicrm_tabset($tabsetName, &$tabs, $context) {
   }
 }
 
-function sepa_civicrm_xmlMenu(&$files) {
-  foreach (glob(__DIR__ . '/xml/Menu/*.xml') as $file) {
-    $files[] = $file;
-  }}
-
+/**
+ * Implements hook_civicrm_postInstall().
+ *
+ * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_postInstall
+ */
+function sepa_civicrm_postInstall() {
+  _sepa_civix_civicrm_postInstall();
+}
 
 // /**
 //  * Implements hook_civicrm_entityTypes().

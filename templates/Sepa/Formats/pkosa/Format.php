@@ -13,17 +13,20 @@
 | written permission from the original author(s).        |
 +--------------------------------------------------------*/
 
-class CRM_Sepa_Logic_Format_citibankpl extends CRM_Sepa_Logic_Format {
+class CRM_Sepa_Logic_Format_pkosa extends CRM_Sepa_Logic_Format {
+
+  /** @var string Only accepted (3), active (5) or auto_accepted (8) mandates should be processed */
+  public static $generatexml_sql_where = ' AND mandate.bank_status IN (3, 5, 8)';
 
   /**
-   * Apply string encoding
-   *
-   * @param string $content
-   *
-   * @return mixed
+   * gives the option of setting extra variables to the template
    */
-  public function characterEncode($content) {
-    return iconv('UTF-8', 'WINDOWS-1250', $content);
+  public function assignExtraVariables($template) {
+    $template->assign('settings', array(
+      'nip' => CRM_Sepa_Logic_Settings::getSetting('recipient_tax_number'),
+      'iban' => CRM_Sepa_Logic_Settings::getSetting('recipient_iban_number'),
+      'info' => CRM_Sepa_Logic_Settings::getSetting('recipient_info'),
+    ));
   }
 
   public function improveContent($content) {
@@ -31,11 +34,11 @@ class CRM_Sepa_Logic_Format_citibankpl extends CRM_Sepa_Logic_Format {
   }
 
   public function getDDFilePrefix() {
-    return 'CITIBANK-';
+    return 'PKOSA-';
   }
 
   public function getFilename($variable_string) {
-    return $variable_string.'.txt';
+    return $variable_string.'.pld';
   }
 
 }

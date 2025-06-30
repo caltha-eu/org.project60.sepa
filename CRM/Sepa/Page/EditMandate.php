@@ -57,6 +57,17 @@ class CRM_Sepa_Page_EditMandate extends CRM_Core_Page {
         $this->adjustAmount($mandate_id);
       } else if ($_REQUEST['action']=='changecyleday') {
         $this->changecyleday($mandate_id);
+      } else if ($_REQUEST['action'] == 'suspend') {
+        $restoreDate = $_REQUEST['restore_date'];
+        $note = $_REQUEST['suspend_note'];
+        if ($restoreDate && $note) {
+          $this->suspend($mandate_id, $restoreDate, $note);
+        } else {
+          CRM_Core_Session::setStatus('Podaj datę, do której deklaracja ma być zawieszona oraz wpisz wyjaśnienie w polu Notatki', '', 'error');
+        }
+
+      } else if ($_REQUEST['action'] == 'restore') {
+        $this->restore($mandate_id);
       } else {
         CRM_Core_Session::setStatus(sprintf(ts("Unkown action '%s'. Ignored.", array('domain' => 'org.project60.sepa')), $_REQUEST['action']), ts('Error', array('domain' => 'org.project60.sepa')), 'error');
       }
@@ -373,4 +384,38 @@ class CRM_Sepa_Page_EditMandate extends CRM_Core_Page {
       CRM_Core_Session::setStatus(sprintf(ts("Modifying an existing mandate is currently not allowed. You can change this on the SEPA settings page.", array('domain' => 'org.project60.sepa'))), ts('Error', array('domain' => 'org.project60.sepa')), 'error');
     }
   }
+
+  /**
+   * @param $mandateId
+   * @param $restoreDate
+   * @param $note
+   *
+   * @throws \CiviCRM_API3_Exception
+   */
+  private function suspend($mandateId, $restoreDate, $note) {
+    $params = [
+      'sequential' => 1,
+      'mandate_id' => $mandateId,
+      'restore_date' => $restoreDate,
+      'note' => $note,
+    ];
+    $result = civicrm_api3('Sepamandatebatch', 'suspend', $params);
+    CRM_Core_Session::setStatus('Zawieszono deklarację PZ.', '', 'success');
+  }
+
+  /**
+   * @param $mandateId
+   * @param $note
+   *
+   * @throws \CiviCRM_API3_Exception
+   */
+  private function restore($mandateId) {
+    $params = [
+      'sequential' => 1,
+      'mandate_id' => $mandateId,
+    ];
+    $result = civicrm_api3('Sepamandatebatch', 'restore', $params);
+    CRM_Core_Session::setStatus('Przywrócono deklarację PZ.', '', 'success');
+  }
+
 }

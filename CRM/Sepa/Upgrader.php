@@ -492,6 +492,27 @@ class CRM_Sepa_Upgrader extends CRM_Extension_Upgrader_Base {
     return TRUE;
   }
 
+  /**
+   * Upgrade to CiviSEPA 1.3.1 schema (db table for importing mandates from csv file.)
+   */
+  public function upgrade_1805() {
+    $this->ctx->log->info('Applying upgrade to 1.3.1 (db table for importing mandates from csv file.)');
+    $this->executeSqlFile('sql/update_1605.sql');
+    return TRUE;
+  }
+
+  /**
+   *
+   * @return TRUE on success
+   * @throws Exception
+   */
+  public function upgrade_1806() {
+    $this->ctx->log->info('Adding new file formats');
+    $customData = new CRM_Sepa_CustomData('org.project60.sepa');
+    $customData->syncOptionGroup(E::path('resources/formats_option_group.json'));
+    return TRUE;
+  }
+
   public function upgrade_11301() {
     $this->ctx->log->info('Adding financial_type_id column to civicrm_sdd_txgroup table.');
     $column = CRM_Core_DAO::singleValueQuery(
