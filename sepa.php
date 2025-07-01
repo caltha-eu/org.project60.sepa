@@ -351,7 +351,7 @@ function sepa_civicrm_navigationMenu(&$menu) {
     'separator' => 2,
     'active' => 1
   ]);
-  
+
   _sepa_civix_insert_navigation_menu($menu,'Contributions', [
     'label' => ts('CiviSEPA Mandates', ['domain' => 'org.project60.sepa']),
     'name' => 'Dashboard',
@@ -361,7 +361,7 @@ function sepa_civicrm_navigationMenu(&$menu) {
     'separator' => 0,
     'active' => 1
   ]);
-  
+
   _sepa_civix_insert_navigation_menu($menu,'Contributions', [
     'label' => E::ts('CiviSEPA Import', ['domain' => 'org.project60.sepa']),
     'name' => 'Import',
@@ -555,12 +555,14 @@ function sepa_civicrm_tabset($tabsetName, &$tabs, $context) {
 }
 
 /**
- * Implements hook_civicrm_postInstall().
+ * Implements hook_civicrm_xmlMenu().
  *
- * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_postInstall
+ * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_xmlMenu
  */
-function sepa_civicrm_postInstall() {
-  _sepa_civix_civicrm_postInstall();
+function sepa_civicrm_xmlMenu(&$files) {
+  foreach (glob(__DIR__ . '/xml/Menu/*.xml') as $file) {
+    $files[] = $file;
+  }
 }
 
 // /**
