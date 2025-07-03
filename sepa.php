@@ -355,7 +355,7 @@ function sepa_civicrm_navigationMenu(&$menu) {
   _sepa_civix_insert_navigation_menu($menu,'Contributions', [
     'label' => ts('CiviSEPA Mandates', ['domain' => 'org.project60.sepa']),
     'name' => 'Dashboard',
-    'url' => 'civicrm/sepa/mandate',
+    'url' => 'civicrm/sepa/mandates',
     'permission' => 'view sepa groups',
     'operator' => NULL,
     'separator' => 0,
