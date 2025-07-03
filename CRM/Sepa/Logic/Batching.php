@@ -78,6 +78,7 @@ class CRM_Sepa_Logic_Batching {
         'entity_id',
         'source',
         'creditor_id',
+        'bank_status',
         'first_contribution.receive_date',
         'contribution_recur.cycle_day',
         'contribution_recur.frequency_interval',
@@ -108,7 +109,7 @@ class CRM_Sepa_Logic_Batching {
       ->addWhere('type', '=', 'RCUR')
       ->addWhere('status', '=', $mode)
       ->addWhere('creditor_id', '=', $creditor_id);
-      
+
     $creditor = civicrm_api3("SepaCreditor", "getsingle", [
       "sequential" => 1,
       "id" => $creditor_id
@@ -127,8 +128,8 @@ class CRM_Sepa_Logic_Batching {
       ->setOffset($offset)
       ->execute()
       ->getArrayCopy();
-      
-   
+
+
 
 
     $mandates_by_nextdate = [];
@@ -363,7 +364,7 @@ class CRM_Sepa_Logic_Batching {
       $mandate['mandate_entity_id'] = $mandate['entity_id'];
       $mandate['start_date'] = $mandate['contribution.receive_date'];
       $mandate['financial_type_id'] = $mandate['contribution.financial_type_id'];
-      
+
       $collection_date = date('Y-m-d', strtotime($mandate['start_date']));
       if ($collection_date <= $earliest_collection_date) {
         $collection_date = $earliest_collection_date;
