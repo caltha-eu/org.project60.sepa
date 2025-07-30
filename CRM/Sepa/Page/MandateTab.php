@@ -52,6 +52,7 @@ class CRM_Sepa_Page_MandateTab extends CRM_Core_Page {
         'contribution.id',
         'contribution.receive_date',
         'status',
+        'bank_status',
         'reference',
         'contribution.financial_type_id:name',
         'campaign.title',
@@ -77,7 +78,7 @@ class CRM_Sepa_Page_MandateTab extends CRM_Core_Page {
       $ooffList[] = [
         'receive_date' => $ooffMandate['contribution.receive_date'],
         'status_raw' => $ooffMandate['status'],
-        'status' => CRM_Sepa_Logic_Status::translateMandateStatus($ooffMandate['status'], TRUE),
+        'status' => $ooffMandate['bank_status'] === 7 ? CRM_Sepa_ExtensionUtil::ts("Suspended") : CRM_Sepa_Logic_Status::translateMandateStatus($ooffMandate['status'], TRUE),
         'reference' => $ooffMandate['reference'],
         'financial_type' => $ooffMandate['contribution.financial_type_id:name'],
         'campaign' => $ooffMandate['campaign.title'],
