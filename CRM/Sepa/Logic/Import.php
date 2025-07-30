@@ -175,7 +175,7 @@ abstract class CRM_Sepa_Logic_Import {
   private static function validateReference($reference) {
     $query = "SELECT count(il.id)
               FROM civicrm_sdd_import_log il JOIN civicrm_sdd_mandate m ON il.reference = m.reference
-              WHERE il.reference = %1 AND il.status = %2";
+              WHERE il.reference = %1 AND il.status IN (%2)";
     $params = [
       1 => [$reference, 'String'],
       2 => [implode(', ', [CRM_Sepa_Logic_Import_Log::STATUS_OK, CRM_Sepa_Logic_Import_Log::STATUS_ACCEPTED]), 'CommaSeparatedIntegers'],
