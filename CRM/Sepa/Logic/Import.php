@@ -170,15 +170,16 @@ abstract class CRM_Sepa_Logic_Import {
    * @param String $reference
    *
    * @return bool True - ok, this reference can be imported
+   * @throws CRM_Core_Exception
    */
   private static function validateReference($reference) {
     $query = "SELECT count(il.id)
               FROM civicrm_sdd_import_log il JOIN civicrm_sdd_mandate m ON il.reference = m.reference
               WHERE il.reference = %1 AND il.status = %2";
-    $params = array(
-      1 => array($reference, 'String'),
-      2 => array(CRM_Sepa_Logic_Import_Log::STATUS_OK, 'Integer'),
-    );
+    $params = [
+      1 => [$reference, 'String'],
+      2 => [implode(', ', [CRM_Sepa_Logic_Import_Log::STATUS_OK, CRM_Sepa_Logic_Import_Log::STATUS_ACCEPTED]), 'CommaSeparatedIntegers'],
+    ];
     $count = (int)CRM_Core_DAO::singleValueQuery($query, $params);
     return !$count;
   }
