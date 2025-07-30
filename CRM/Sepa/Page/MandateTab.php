@@ -74,6 +74,7 @@ class CRM_Sepa_Page_MandateTab extends CRM_Core_Page {
       ->addWhere('contact_id', '=', $contactId)
       ->addWhere('type', '=', 'OOFF')
       ->execute();
+
     foreach ($ooffMandates as $ooffMandate) {
       $ooffList[] = [
         'receive_date' => $ooffMandate['contribution.receive_date'],
@@ -110,6 +111,7 @@ class CRM_Sepa_Page_MandateTab extends CRM_Core_Page {
         'contribution_recur.next_sched_contribution_date',
         'last_contribution.cancel_reason',
         'status',
+        'bank_status',
         'reference',
         'GROUP_FIRST(cancel_reason.note) AS cancel_reason',
         'contribution_recur.financial_type_id:name',
@@ -163,7 +165,7 @@ class CRM_Sepa_Page_MandateTab extends CRM_Core_Page {
         'reference' => $rcurMandate['reference'],
         'financial_type' => $rcurMandate['contribution_recur.financial_type_id:name'],
         'campaign' => $rcurMandate['campaign.title'],
-        'status' => CRM_Sepa_Logic_Status::translateMandateStatus($rcurMandate['status'], TRUE),
+        'status' => $rcurMandate['bank_status'] === 7 ? CRM_Sepa_ExtensionUtil::ts("Suspended") : CRM_Sepa_Logic_Status::translateMandateStatus($rcurMandate['status'], TRUE),
         'frequency' => CRM_Utils_SepaOptionGroupTools::getFrequencyText(
           $rcurMandate['contribution_recur.frequency_interval'],
           $rcurMandate['contribution_recur.frequency_unit'],
@@ -171,7 +173,7 @@ class CRM_Sepa_Page_MandateTab extends CRM_Core_Page {
         ),
         'next_collection_date' => $rcurMandate['contribution_recur.next_sched_contribution_date'],
         'last_collection_date' => $lastInstallment['receive_date'] ?? NULL,
-        'cancel_reason' => $rcur_mandates['cancel_reason'],
+        'cancel_reason' => $rcurMandate['cancel_reason'],
         'last_cancel_reason' => $lastInstallment['cancel_reason'] ?? NULL,
         'end_date' => $rcurMandate['contribution_recur.end_date'],
         'currency' => $rcurMandate['contribution_recur.currency'],
