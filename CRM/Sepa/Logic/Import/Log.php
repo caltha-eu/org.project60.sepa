@@ -10,9 +10,9 @@ abstract class CRM_Sepa_Logic_Import_Log {
   public static function newHash() {
     return md5(time());
   }
-  
+
   public static function add($values) {
-    $query = "INSERT INTO civicrm_sdd_import_log (import_hash, status, reference, mandate_id, filename, row, data, api_error) 
+    $query = "INSERT INTO civicrm_sdd_import_log (import_hash, status, reference, mandate_id, filename, `row`, data, api_error)
               VALUES (%1, %2, %3, %4, %5, %6, %7, %8)";
     $params = array(
       1 => array($values['import_hash'], 'String'),
@@ -26,7 +26,7 @@ abstract class CRM_Sepa_Logic_Import_Log {
     );
     CRM_Core_DAO::executeQuery($query, $params);
   }
-  
+
   public static function getFailedByHash($import_hash) {
     $data = array();
     $query = "SELECT * FROM civicrm_sdd_import_log WHERE import_hash = %1 AND status < 0";
